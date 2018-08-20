@@ -1,0 +1,53 @@
+# Don't touch this :)
+config-version: 2
+
+rankup-fireworks: true
+
+max-members-level-0: 2
+
+level-in-chat: true
+
+chat-prefix: "&6(&a%level%&6) &f"
+
+f-rankup-aliases:
+- "rankup"
+
+# Help page where the /f rankup command is display
+# Only with FactionsUUID or LegacyFaction if optipn 'useOldHelp' is enable
+f-rankup-page: 2
+
+rankup-inventory:
+  name: '&c&lRankup'
+  levels-item:
+    name: '&f%ability% %state%'
+    lore:
+    - ''
+    - '&cAbilities:'
+    - '&c* &7%ability_info%'
+    - '&c* &7Max members: &f%max_members%'
+    - ''
+    - '&7Available at level: &f%level%'
+  rankup-item:
+    type: INK_SACK
+    data: 1
+    name: '&c&lClick to Rankup!'
+    lore:
+    - ''
+    - '&7Faction: &c%faction_name%'
+    - '&7Level: &c%faction_level%'
+    - '&7Faction money: &c%money% $'
+    - '&7'
+    - '&7Next Rank: &c%next_level_cost% $'
+    - ''
+  rankup-item-max-level:
+    type: INK_SACK
+    data: 0
+    name: '&c&lMax level!'
+    lore:
+    - ''
+    - '&cYour faction is at max level'
+    - ''
+    - '&7Faction: &c%faction_name%'
+    - '&7Level: &c%faction_level%'
+    - '&7Faction money: &c%money%'
+    - '&7'

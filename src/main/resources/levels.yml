@@ -1,0 +1,137 @@
+#Faction levels
+levels:
+  1:
+    cost: 20000
+    max-members: 2
+    name: "Silktouch"
+    item:
+      type: "DIAMOND_PICKAXE"
+      data: 0
+      description:
+      - '&7You will have 10% of chances to have'
+      - '&7silktouch on your tool when mining'
+    ability:
+      type: "custom" # Set to custom or to effect
+      name: "SilkTouch" # Name of the ability. Can be Fly, MoreDrops, ReduceFalls, SilkTouch, DoubleXP
+      chances: 10 # % of chances to have the effect
+  2:
+    cost: 30000
+    max-members: 3
+    name: "Moredrops"
+    item:
+      type: "DIAMOND"
+      data: 0
+      description:
+      - '&7You will have 25% of chances to get'
+      - '&72x the inventory of a player when killing'
+      - '&7a player'
+    ability:
+      type: "custom"
+      name: "MoreDrops"
+      chances: 25
+  3:
+    cost: 40000
+    max-members: 4
+    name: "Night Vision"
+    item:
+      type: "EYE_OF_ENDER"
+      data: 0
+      description:
+      - '&7You will have Night Vision effect'
+    ability:
+      type: "effect"
+      effect: "NIGHT_VISION"
+      level: 1
+  4:
+    cost: 50000
+    max-members: 5
+    name: "Speed boost"
+    item:
+      type: "SUGAR"
+      data: 0
+      description:
+      - '&7You will have Speed effect'
+    ability:
+      type: "effect"
+      effect: "SPEED"
+      level: 1
+  5:
+    cost: 60000
+    max-members: 6
+    name: "Fast Digging"
+    item:
+      type: "GOLD_PICKAXE"
+      data: 0
+      description:
+      - '&7You will have haste effect'
+    ability:
+      type: "effect"
+      effect: "FAST_DIGGING"
+      level: 2
+  6:
+    cost: 70000
+    max-members: 7
+    name: "Jump boost"
+    item:
+      type: "RABBIT_FOOT"
+      data: 0
+      description:
+      - '&7You will have jump boost II effect'
+    ability:
+      type: "effect"
+      effect: "JUMP"
+      level: 2
+  7:
+    cost: 80000
+    max-members: 8
+    name: "Strenght"
+    item:
+      type: "IRON_SWORD"
+      data: 0
+      description:
+      - '&7You will have Strenght effect'
+    ability:
+      type: "effect"
+      effect: "INCREASE_DAMAGE"
+      level: 1
+  8:
+    cost: 100000
+    max-members: 10
+    name: "Reduce fall damages"
+    item:
+      type: "IRON_BOOTS"
+      data: 0
+      description:
+      - '&7You will have 25% of chances to cancel'
+      - '&7fall damages when falling'
+    ability:
+      type: "custom"
+      name: "ReduceFalls"
+      chances: 25
+  9:
+    cost: 1100000
+    max-members: 11
+    name: "Double XP"
+    item:
+      type: "EXP_BOTTLE"
+      data: 0
+      description:
+      - '&7You will have 20% of chances to get'
+      - '&7double XP'
+    ability:
+      type: "custom"
+      name: "DoubleXP"
+      chances: 20
+  10:
+    cost: 2000000
+    max-members: 12
+    name: "Fly"
+    item:
+      type: "FEATHER"
+      data: 0
+      description:
+      - '&7You will have fly'
+      - '&7when you are in your faction'
+    ability:
+      type: "custom"
+      name: "Fly"

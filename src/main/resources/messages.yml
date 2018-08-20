@@ -1,0 +1,28 @@
+prefix: "&8[&4FactionRankup&8]&3"
+no-permission: "%prefix% &cYou don't have the permission to execute this command !"
+no-faction: "%prefix% &cYou are not in a faction"
+no-money: "%prefix% &cYour faction does not have enough money to upgrade"
+locked: "&4&lLocked"
+unlocked: "&a&lUnlocked"
+max-players: "%prefix% &c%faction% already have %maxplayers% member. %faction% have to upgrade to Faction Level %next_level% before inviting more people."
+max-level: "%prefix% &cYou are already the highest level!"
+
+# Abilities messages, will be display in actionbar if you are in a 1.8+ server or in chat in 1.7 servers. Set to "" a message to disable it
+double-xp: "%prefix% You got double xp"
+silktouch: "%prefix% Block mined with silktouch"
+moredrops: "%prefix% You got player's inventory x2"
+reducefall: "%prefix% Your fall damages was cancelled"
+fly-enabled: "%prefix% Fly &aenabled&3, you are in your faction"
+fly-disabled: "%prefix% Fly &cdisabled&3, you are not in your faction"
+
+# Message display in /f help
+f-rankup-help: "Rankup your faction"
+
+# Set a message to "" to disable it
+# Messages when rankup
+# Titles / subtitles are not display on 1.7 servers (Minecraft limitation)
+rankup:
+  title: "&a&lCongratulations"
+  subtitle: "&2You ranked up!"
+  chat: "%prefix% &c%player% upgraded the faction to level %new_level%!"
+  broadcast: "%prefix% &c%faction% upgraded to %new_level%!"

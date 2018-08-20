@@ -1,0 +1,14 @@
+name: FactionRankup
+version: ${project.version}
+authors: [MrMicky, Vouchs]
+description: Rank up your Faction and get the strongest. With abilities for each rank.
+softdepend: [Factions, LegacyFactions]
+website: https://www.spigotmc.org/resources/factionrankup.43316/
+main: fr.mrmicky.factionrankup.FactionRankup
+commands:
+  rankup:
+    description: Rankup your faction
+    aliases: [frankup]
+  factionrankup:
+    description: Display informations about FactionRankup
+    usage: /<command> <about|reload>
