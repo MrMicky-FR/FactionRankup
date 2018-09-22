@@ -6,6 +6,7 @@ import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.FactionType;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.implementations.factions.MFactionsManager;
+import fr.mrmicky.factionrankup.compatibility.implementations.factionsone.FactionsOneManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.FactionsUUIDManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
@@ -53,16 +54,20 @@ public class FactionRankup extends JavaPlugin {
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
                 try {
-                    Class.forName("com.massivecraft.factions.FPlayer");
-                    factionType = FactionType.FACTIONS_UUID;
+                    Class.forName("de.erethon.factionsone.FactionsOneAPI");
+                    factionType = FactionType.FACTIONS_ONE;
                 } catch (ClassNotFoundException ignored) {
-                    // Not FactionsUUID
+                    try {
+                        Class.forName("com.massivecraft.factions.FPlayer");
+                        factionType = FactionType.FACTIONS_UUID;
+                    } catch (ClassNotFoundException ignored1) {
+                    }
                 }
             } else if (getServer().getPluginManager().getPlugin("LegacyFactions") != null) {
                 factionType = FactionType.LEGACY_FACTIONS;
             } else {
                 getLogger().severe("No Factions plugin founded, disabling plugin");
-                getLogger().severe("Currently supported plugins: Factions, FactionsUUID, LegacyFaction");
+                getLogger().severe("Currently supported plugins: Factions, FactionsUUID, FactionsOne and LegacyFaction");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
@@ -73,6 +78,9 @@ public class FactionRankup extends JavaPlugin {
                     break;
                 case FACTIONS_UUID:
                     Compatibility.setFactionManager(new FactionsUUIDManager());
+                    break;
+                case FACTIONS_ONE:
+                    Compatibility.setFactionManager(new FactionsOneManager());
                     break;
                 case LEGACY_FACTIONS:
                     Compatibility.setFactionManager(new LegacyFactionsManager());
