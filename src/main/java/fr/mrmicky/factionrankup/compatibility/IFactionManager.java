@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface IFactionManager {
 
+    default String getPluginName() {
+        return "Factions";
+    }
+
     IFaction getFactionByName(String name);
 
     IFaction getFactionByPlayer(Player player);

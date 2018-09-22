@@ -13,12 +13,13 @@ import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.utils.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 
 public class FactionRankup extends JavaPlugin {
 
-    //public static final String USER_ID = "BETA-588"; // TODO
+    //public static final String USER_ID = "BETA-589";
     public static final String USER_ID = "%%__USER__%%";
     public static final String NONCE_ID = "%%__NONCE__%%";
 
@@ -82,6 +83,31 @@ public class FactionRankup extends JavaPlugin {
             getLogger().info("*** Using custom Faction ***");
         }
 
+        if (Compatibility.isPluginFactionEnabled()) {
+            start(c);
+        } else {
+            getLogger().warning("The plugin Factions is not enabled yet, delaying start...");
+
+            new BukkitRunnable() {
+
+                int i = 10;
+
+                @Override
+                public void run() {
+                    if (Compatibility.isPluginFactionEnabled()) {
+                        start(c);
+                        cancel();
+                    } else if (i-- >= 0) {
+                        getLogger().severe("The plugin Factions is not enabled after 5 seconds, disabling :(");
+                        cancel();
+                        getServer().getPluginManager().disablePlugin(FactionRankup.this);
+                    }
+                }
+            }.runTaskTimer(this, 10, 10);
+        }
+    }
+
+    private void start(Checker c) {
         new AbilitiesTask(this);
 
         new RankupListener(this);

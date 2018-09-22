@@ -18,6 +18,11 @@ public class LegacyFactionsManager implements IFactionManager {
     }
 
     @Override
+    public String getPluginName() {
+        return "LegacyFactions";
+    }
+
+    @Override
     public IFaction getFactionByName(String name) {
         return of(FactionColl.get().getByTag(name));
     }

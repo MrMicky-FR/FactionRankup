@@ -6,7 +6,7 @@
 
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup</artifactId>
-    <version>3.0-BETA</version>
+    <version>3.0.1</version>
     <packaging>jar</packaging>
 
     <name>FactionRankup</name>
@@ -67,14 +67,6 @@
             <version>1.6.9.5-U0.2.2</version>
             <scope>provided</scope>
         </dependency>
-        <!-- MassiveCore -->
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>massivecore</artifactId>
-            <version>2.14.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/MassiveCore.jar</systemPath>
-        </dependency>
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
@@ -89,6 +81,14 @@
             <artifactId>LegacyFactions</artifactId>
             <version>v1.4.3</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- MassiveCore -->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>massivecore</artifactId>
+            <version>2.14.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/MassiveCore.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
