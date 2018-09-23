@@ -13,8 +13,4 @@ public class Compatibility {
     public static void setFactionManager(IFactionManager factionManager) {
         Compatibility.factionManager = factionManager;
     }
-
-    public static boolean isPluginFactionEnabled() {
-        return factionManager != null && Bukkit.getPluginManager().isPluginEnabled(factionManager.getPluginName());
-    }
 }

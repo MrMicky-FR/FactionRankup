@@ -14,7 +14,6 @@ import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.utils.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 
@@ -71,51 +70,44 @@ public class FactionRankup extends JavaPlugin {
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
-
-            switch (factionType) {
-                case FACTIONS:
-                    Compatibility.setFactionManager(new MFactionsManager());
-                    break;
-                case FACTIONS_UUID:
-                    Compatibility.setFactionManager(new FactionsUUIDManager());
-                    break;
-                case FACTIONS_ONE:
-                    Compatibility.setFactionManager(new FactionsOneManager());
-                    break;
-                case LEGACY_FACTIONS:
-                    Compatibility.setFactionManager(new LegacyFactionsManager());
-                    break;
-            }
         } else {
             factionType = FactionType.CUSTOM;
             getLogger().info("*** Using custom Faction ***");
         }
 
-        if (Compatibility.isPluginFactionEnabled()) {
+        if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
             start(c);
         } else {
             getLogger().warning("The plugin Factions is not enabled yet, delaying start...");
 
-            new BukkitRunnable() {
-
-                int i = 10;
-
-                @Override
-                public void run() {
-                    if (Compatibility.isPluginFactionEnabled()) {
-                        start(c);
-                        cancel();
-                    } else if (i-- >= 0) {
-                        getLogger().severe("The plugin Factions is not enabled after 5 seconds, disabling :(");
-                        cancel();
-                        getServer().getPluginManager().disablePlugin(FactionRankup.this);
-                    }
+            getServer().getScheduler().runTask(this, () -> {
+                getLogger().info("Trying to enable again...");
+                if (factionType.isPluginEnabled()) {
+                    start(c);
+                } else {
+                    getLogger().severe("The plugin Factions is not enabled after start, disabling :(");
+                    getServer().getPluginManager().disablePlugin(this);
                 }
-            }.runTaskTimer(this, 10, 10);
+            });
         }
     }
 
     private void start(Checker c) {
+        switch (factionType) {
+            case FACTIONS:
+                Compatibility.setFactionManager(new MFactionsManager());
+                break;
+            case FACTIONS_UUID:
+                Compatibility.setFactionManager(new FactionsUUIDManager());
+                break;
+            case FACTIONS_ONE:
+                Compatibility.setFactionManager(new FactionsOneManager());
+                break;
+            case LEGACY_FACTIONS:
+                Compatibility.setFactionManager(new LegacyFactionsManager());
+                break;
+        }
+
         new AbilitiesTask(this);
 
         new RankupListener(this);
