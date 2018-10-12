@@ -17,7 +17,7 @@ levels:
   2:
     cost: 30000
     max-members: 3
-    name: "Moredrops"
+    name: "Double Mob Drops"
     item:
       type: "DIAMOND"
       data: 0

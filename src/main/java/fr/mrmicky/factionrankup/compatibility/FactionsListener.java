@@ -3,7 +3,6 @@ package fr.mrmicky.factionrankup.compatibility;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.utils.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

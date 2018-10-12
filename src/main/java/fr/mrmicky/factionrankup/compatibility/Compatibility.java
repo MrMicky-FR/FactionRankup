@@ -1,7 +1,5 @@
 package fr.mrmicky.factionrankup.compatibility;
 
-import org.bukkit.Bukkit;
-
 public class Compatibility {
 
     private static IFactionManager factionManager;
