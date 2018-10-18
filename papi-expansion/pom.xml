@@ -7,15 +7,15 @@
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup-expansion</artifactId>
     <version>1.2.0</version>
-    <packaging>jar</packaging>
 
-    <name>Factionrankup Expansion</name>
+    <name>FactionRankup Expansion</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <finalName>Expansion-FactionRankup-${project.version}</finalName>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
