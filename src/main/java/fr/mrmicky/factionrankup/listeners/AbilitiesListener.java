@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +76,11 @@ public class AbilitiesListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
+        // noinspection deprecation
+        ItemStack item = p.getItemInHand();
 
-        if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR
-                || p.getItemInHand().containsEnchantment(Enchantment.SILK_TOUCH)
-                || !Enchantment.SILK_TOUCH.canEnchantItem(p.getItemInHand()) || p.getGameMode() != GameMode.SURVIVAL) {
+        if (item == null || item.getType() == Material.AIR || item.containsEnchantment(Enchantment.SILK_TOUCH)
+                || !Enchantment.SILK_TOUCH.canEnchantItem(item) || p.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
 

@@ -21,7 +21,7 @@ public class Checker {
         loadUsername();
 
         if (valid) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(m, this::checkUpdate, 100);
+            Bukkit.getScheduler().runTaskAsynchronously(m, this::checkUpdate);
         }
     }
 
@@ -48,6 +48,7 @@ public class Checker {
                 Bukkit.getPluginManager().disablePlugin(m);
             }
         } catch (Exception e) {
+            // ignore
         }
     }
 
@@ -80,21 +81,22 @@ public class Checker {
 
             username = sb.toString().split("<title>")[1].split("</title>")[0].split(" | ")[0] + " ";
         } catch (Exception e) {
+            // ignore
         }
     }
 
     private void checkUpdate() {
         try {
             URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=43316");
-            String lastVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()))
-                    .readLine();
-            if (!m.getDescription().getVersion().equalsIgnoreCase(lastVersion)) {
-                m.getLogger().info("A new version is avaible ! Last version is " + lastVersion + " and you are on "
-                        + m.getDescription().getVersion());
-                m.getLogger().info(
-                        "You can download it on SpigotMC: " + m.getDescription().getWebsite());
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                String lastVersion = reader.readLine();
+                if (!m.getDescription().getVersion().equalsIgnoreCase(lastVersion)) {
+                    m.getLogger().warning("A new version is available ! Last version is " + lastVersion + " and you are on " + m.getDescription().getVersion());
+                    m.getLogger().warning("You can download it on: " + m.getDescription().getWebsite());
+                }
             }
         } catch (Exception e) {
+            // Don't display an error
         }
     }
 

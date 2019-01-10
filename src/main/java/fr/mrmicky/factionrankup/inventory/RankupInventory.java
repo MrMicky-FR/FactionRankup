@@ -38,10 +38,10 @@ public class RankupInventory extends FastInv {
         this.main = main;
         this.faction = Compatibility.get().getFactionByPlayer(p);
 
-        init(p);
+        init();
     }
 
-    private void init(Player p) {
+    private void init() {
         int level = main.getFactionLevel(faction);
         int nextLevelCost = getNextRankPrice(level);
 
