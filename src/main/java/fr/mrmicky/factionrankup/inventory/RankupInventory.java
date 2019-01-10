@@ -134,8 +134,9 @@ public class RankupInventory extends FastInv {
                 }.runTaskTimer(main, 10, 10);
             }
 
-            Titles.sendTitle(p, 5, 30, 5, main.messages.getString("rankup.title"),
-                    main.messages.getString("rankup.subtitle"));
+            String title = Messages.color(main.messages.getString("rankup.title"));
+            String subtitle = Messages.color(main.messages.getString("rankup.subtitle"));
+            Titles.sendTitle(p, title, subtitle, 5, 30, 5);
 
             String message = main.messages.getString("rankup.chat");
             if (!message.isEmpty()) {

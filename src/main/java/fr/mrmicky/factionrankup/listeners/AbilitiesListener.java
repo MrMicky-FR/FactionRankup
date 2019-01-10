@@ -3,6 +3,7 @@ package fr.mrmicky.factionrankup.listeners;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.abilities.Ability;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
+import fr.mrmicky.factionrankup.utils.Messages;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -87,7 +88,8 @@ public class AbilitiesListener implements Listener {
         if (Ability.SILKTOUCH.isActive(p)) {
             sendActionbar(p, "silktouch");
 
-            p.getItemInHand().addEnchantment(Enchantment.SILK_TOUCH, 1);
+            item.addEnchantment(Enchantment.SILK_TOUCH, 1);
+            // noinspection deprecation
             Bukkit.getScheduler().runTask(main, () -> p.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
         }
     }
@@ -123,7 +125,7 @@ public class AbilitiesListener implements Listener {
 
     private void sendActionbar(Player p, String s) {
         if (!s.isEmpty()) {
-            Titles.sendActionbar(p, main.messages.getString(s));
+            Titles.sendActionBar(p, Messages.color(main.messages.getString(s)));
         }
     }
 }
