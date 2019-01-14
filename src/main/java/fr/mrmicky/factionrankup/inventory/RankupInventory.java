@@ -4,7 +4,6 @@ import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
-import fr.mrmicky.factionrankup.utils.FastInv;
 import fr.mrmicky.factionrankup.utils.Titles;
 import fr.mrmicky.factionrankup.utils.Version;
 import org.bukkit.*;
