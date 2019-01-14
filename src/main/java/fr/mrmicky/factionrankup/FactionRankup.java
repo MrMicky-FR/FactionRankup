@@ -9,6 +9,7 @@ import fr.mrmicky.factionrankup.compatibility.implementations.factions.MFactions
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsone.FactionsOneManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.FactionsUUIDManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
+import fr.mrmicky.factionrankup.inventory.FastInv;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.storage.StorageManager;
@@ -46,7 +47,6 @@ public class FactionRankup extends JavaPlugin {
 
         instance = this;
 
-        Version.init(this);
         FastInv.init(this);
 
         MigrationV2toV3.migrate(this);

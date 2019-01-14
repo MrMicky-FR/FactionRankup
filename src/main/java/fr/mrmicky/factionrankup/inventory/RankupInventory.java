@@ -5,7 +5,6 @@ import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
 import fr.mrmicky.factionrankup.utils.Titles;
-import fr.mrmicky.factionrankup.utils.Version;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -159,8 +158,9 @@ public class RankupInventory extends FastInv {
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
         }
 
-        if (Version.V1_8_R1.isVersionOrHigher()) {
+        try {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+        } catch (Exception ignore) {
         }
 
         if (replaces != null) {

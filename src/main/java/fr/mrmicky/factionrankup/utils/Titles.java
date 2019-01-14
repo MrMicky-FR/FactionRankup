@@ -4,12 +4,14 @@ import fr.mrmicky.factionrankup.utils.nms.TitlesNMS;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Titles {
 
     private static boolean supportSendTitle;
     private static boolean supportSpigotActionBar;
+    private static boolean v1_7 = Bukkit.getVersion().contains("1.7");
 
     static {
         try {
@@ -28,7 +30,7 @@ public class Titles {
     }
 
     public static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        if (Version.V1_7_R4.isVersionOrLower()) {
+        if (v1_7) {
             return;
         }
 
@@ -40,7 +42,7 @@ public class Titles {
     }
 
     public static void sendActionBar(Player p, String text) {
-        if (Version.V1_7_R4.isVersionOrLower()) {
+        if (v1_7) {
             p.sendMessage(text);
             return;
         }
