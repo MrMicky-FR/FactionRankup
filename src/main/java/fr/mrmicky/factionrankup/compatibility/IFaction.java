@@ -8,6 +8,8 @@ public interface IFaction {
 
     String getName();
 
+    String getId();
+
     List<Player> getPlayers();
 
     boolean hasMoney(double money);

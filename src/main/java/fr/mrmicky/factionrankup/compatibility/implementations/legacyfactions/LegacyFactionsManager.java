@@ -23,6 +23,11 @@ public class LegacyFactionsManager implements IFactionManager {
     }
 
     @Override
+    public IFaction getFactionById(String id) {
+        return of(FactionColl.get().getFactionById(id));
+    }
+
+    @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(FPlayerColl.get(player).getFaction());
     }

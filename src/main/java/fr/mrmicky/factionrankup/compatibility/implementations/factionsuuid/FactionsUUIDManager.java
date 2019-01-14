@@ -23,6 +23,11 @@ public class FactionsUUIDManager implements IFactionManager {
     }
 
     @Override
+    public IFaction getFactionById(String id) {
+        return of(Factions.getInstance().getFactionById(id));
+    }
+
+    @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(FPlayers.getInstance().getByPlayer(player).getFaction());
     }

@@ -8,6 +8,8 @@ public interface IFactionManager {
 
     IFaction getFactionByName(String name);
 
+    IFaction getFactionById(String id);
+
     IFaction getFactionByPlayer(Player player);
 
     boolean isInOwnTerritory(Player player);

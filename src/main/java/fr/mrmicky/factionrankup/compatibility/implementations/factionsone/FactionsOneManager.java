@@ -26,6 +26,11 @@ public class FactionsOneManager implements IFactionManager {
     }
 
     @Override
+    public IFaction getFactionById(String id) {
+        return of(Factions.i.get(id));
+    }
+
+    @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(FPlayers.i.get(player).getFaction());
     }

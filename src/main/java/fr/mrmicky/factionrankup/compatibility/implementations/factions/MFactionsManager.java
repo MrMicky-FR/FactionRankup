@@ -23,6 +23,11 @@ public class MFactionsManager implements IFactionManager {
     }
 
     @Override
+    public IFaction getFactionById(String id) {
+        return of(FactionColl.get().getIdToEntityRaw().get(id));
+    }
+
+    @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(MPlayer.get(player).getFaction());
     }

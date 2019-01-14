@@ -21,6 +21,11 @@ public class MFactionsImpl implements IFaction {
     }
 
     @Override
+    public String getId() {
+        return faction.getId();
+    }
+
+    @Override
     public List<Player> getPlayers() {
         return faction.getOnlinePlayers();
     }
