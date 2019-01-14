@@ -6,9 +6,9 @@ softdepend: [Factions, LegacyFactions]
 website: https://www.spigotmc.org/resources/factionrankup.43316/
 main: fr.mrmicky.factionrankup.FactionRankup
 commands:
-  rankup:
+  frankup:
     description: Rankup your faction
-    aliases: [frankup]
+    aliases: [rankup]
   factionrankup:
     description: Display informations about FactionRankup
     usage: /<command> <about|reload>
