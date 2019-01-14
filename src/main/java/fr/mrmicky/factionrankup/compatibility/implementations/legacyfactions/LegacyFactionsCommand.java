@@ -30,7 +30,7 @@ public class LegacyFactionsCommand extends FCommand {
             commands = CmdFactionsHelp.get().helpPages;
         }
 
-        int page = FactionRankup.getInstance().config.getInt("f-rankup-page");
+        int page = FactionRankup.getInstance().getConfig().getInt("f-rankup-page");
 
         if (page < 1 || page > commands.size()) {
             FactionRankup.getInstance().getLogger().warning("Help page set in config (" + page + ") is too big or too small ! Need to be between 1 and " + commands.size());

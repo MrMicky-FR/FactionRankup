@@ -18,7 +18,7 @@ public class FactionRankupCommand {
     }
 
     public static List<String> getRankupAliases() {
-        List<String> aliases = FactionRankup.getInstance().config.getStringList("f-rankup-aliases");
+        List<String> aliases = FactionRankup.getInstance().getConfig().getStringList("f-rankup-aliases");
         return aliases.isEmpty() ? Collections.singletonList("rankup") : aliases;
     }
 }

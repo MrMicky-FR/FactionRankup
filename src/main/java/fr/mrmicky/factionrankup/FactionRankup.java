@@ -143,23 +143,6 @@ public class FactionRankup extends JavaPlugin {
         return ChatUtils.color(messages.getConfig().getString(key).replace("%prefix%", messages.getConfig().getString("prefix")));
     }
 
-    private void registerNewFactions() {
-        if (data.contains("Factions")) {
-            return;
-        }
-
-        for (IFaction faction : Compatibility.get().getAllFactions()) {
-            if (!data.contains(faction.getName())) {
-                if (!faction.get().equals(Compatibility.get().getSafezone().get())
-                        && !faction.get().equals(Compatibility.get().getWarzone().get())
-                        && !faction.get().equals(Compatibility.get().getWilderness().get())) {
-                    setFactionLevel(faction.getName(), 0);
-                }
-            }
-        }
-        ConfigHandler.save("data");
-    }
-
     public void setFactionLevel(Player p, int level) {
         setFactionLevel(Compatibility.get().getFactionByPlayer(p), level);
     }
