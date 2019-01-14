@@ -26,7 +26,7 @@ public class AbilitiesTask extends BukkitRunnable {
                 if (Compatibility.get().hasFaction(p)) {
                     int level = main.getFactionLevel(p);
                     for (int i = level; i > 1; i--) {
-                        ConfigurationSection conf = main.levels.getConfigurationSection("levels." + i + ".ability");
+                        ConfigurationSection conf = main.getLevelsConfig().getConfigurationSection("levels." + i + ".ability");
                         if (conf != null && conf.getString("type").equalsIgnoreCase("effect")) {
                             PotionEffectType effect = PotionEffectType.getByName(conf.getString("effect").toUpperCase());
                             p.addPotionEffect(new PotionEffect(effect, 50000, conf.getInt("level") - 1), true);

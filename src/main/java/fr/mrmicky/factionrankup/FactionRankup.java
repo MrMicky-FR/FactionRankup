@@ -12,6 +12,7 @@ import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.Leg
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.utils.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,11 +25,12 @@ public class FactionRankup extends JavaPlugin {
     public static final String NONCE_ID = "%%__NONCE__%%";
 
     private static FactionRankup instance;
-    public ConfigHandler.Configurations config;
-    public ConfigHandler.Configurations levels;
-    public ConfigHandler.Configurations messages;
+
     private FactionType factionType = FactionType.FACTIONS;
-    private ConfigHandler.Configurations data;
+
+    private ConfigWrapper levels;
+    private ConfigWrapper messages;
+    private ConfigWrapper data;
 
     public static FactionRankup getInstance() {
         return instance;
@@ -48,7 +50,10 @@ public class FactionRankup extends JavaPlugin {
 
         MigrationV2toV3.migrate(this);
 
-        registerConfigurations();
+        saveDefaultConfig();
+        levels = new ConfigWrapper(this, "levels.yml");
+        messages = new ConfigWrapper(this, "messages.yml");
+        data = new ConfigWrapper(this, "data.yml");
 
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
@@ -124,29 +129,18 @@ public class FactionRankup extends JavaPlugin {
         return factionType;
     }
 
-    public String getMessage(String key) {
-        return ChatUtils.color(messages.getString(key).replace("%prefix%", messages.getString("prefix")));
+    public FileConfiguration getLevelsConfig() {
+        return levels.getConfig();
     }
 
-    private void registerConfigurations() {
-        try {
-            ConfigHandler.registerConfig("data", "data.yml", this);
-            ConfigHandler.registerConfig("config", "config.yml", this);
+    public void reloadAllConfigs() {
+        reloadConfig();
+        messages.load();
+        levels.load();
+    }
 
-            ConfigHandler.registerConfig("levels", "levels.yml", this);
-            ConfigHandler.registerConfig("messages", "messages.yml", this);
-
-            ConfigHandler.loadAll();
-            ConfigHandler.saveAll();
-
-            data = ConfigHandler.getConfig("data");
-            config = ConfigHandler.getConfig("config");
-
-            levels = ConfigHandler.getConfig("levels");
-            messages = ConfigHandler.getConfig("messages");
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Cannot load configurations files", e);
-        }
+    public String getMessage(String key) {
+        return ChatUtils.color(messages.getConfig().getString(key).replace("%prefix%", messages.getConfig().getString("prefix")));
     }
 
     private void registerNewFactions() {
@@ -175,13 +169,13 @@ public class FactionRankup extends JavaPlugin {
     }
 
     public void setFactionLevel(String faction, int level) {
-        data.set("Factions." + faction + ".Level", level);
-        ConfigHandler.save("data");
+        data.getConfig().set("Factions." + faction + ".Level", level);
+        data.save();
     }
 
     public void removeFactionLevel(String faction) {
-        data.set("Factions." + faction, null);
-        ConfigHandler.save("data");
+        data.getConfig().set("Factions." + faction, null);
+        data.save();
     }
 
     public int getFactionLevel(Player p) {
@@ -193,6 +187,6 @@ public class FactionRankup extends JavaPlugin {
     }
 
     public int getFactionLevel(String faction) {
-        return data.getInt("Factions." + faction + ".Level");
+        return data.getConfig().getInt("Factions." + faction + ".Level");
     }
 }

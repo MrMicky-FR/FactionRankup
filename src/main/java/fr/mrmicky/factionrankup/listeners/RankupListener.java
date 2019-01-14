@@ -31,7 +31,7 @@ public class RankupListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        if (main.config.getBoolean("level-in-chat")) {
+        if (main.getConfig().getBoolean("level-in-chat")) {
             int level = main.getFactionLevel(e.getPlayer());
 
             String format = ChatUtils.color(main.getConfig().getString("chat-prefix")).replace("%level%", String.valueOf(level));

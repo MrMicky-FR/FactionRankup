@@ -31,7 +31,7 @@ public class RankupInventory extends FastInv {
     private static final Random RANDOM = new Random();
 
     public RankupInventory(FactionRankup main, Player p) {
-        super(54, ChatUtils.color(main.config.getString("rankup-inventory.name")));
+        super(54, ChatUtils.color(main.getConfig().getString("rankup-inventory.name")));
         this.main = main;
         this.faction = Compatibility.get().getFactionByPlayer(p);
 
@@ -42,7 +42,7 @@ public class RankupInventory extends FastInv {
         int level = main.getFactionLevel(faction);
         int nextLevelCost = getNextRankPrice(level);
 
-        ConfigurationSection conf = main.config.getConfigurationSection("rankup-inventory");
+        ConfigurationSection conf = main.getConfig().getConfigurationSection("rankup-inventory");
         ConfigurationSection item = conf.getConfigurationSection(nextLevelCost > 0 ? "rankup-item" : "rankup-item-max-level");
 
         UnaryOperator<String> replace = s -> {
@@ -55,7 +55,7 @@ public class RankupInventory extends FastInv {
         addItem(13, getItem(item.getString("type"), item.getInt("data"), item.getString("name"),
                 item.getStringList("lore"), false, replace), e -> rankup(e.getPlayer()));
 
-        ConfigurationSection levels = main.levels.getConfigurationSection("levels");
+        ConfigurationSection levels = main.getLevelsConfig().getConfigurationSection("levels");
         for (int i = 1; i < 100; i++) {
             String levelString = String.valueOf(i);
             ConfigurationSection levelItem = levels.getConfigurationSection(String.valueOf(i));
@@ -111,7 +111,7 @@ public class RankupInventory extends FastInv {
             faction.removeMoney(price);
             p.closeInventory();
 
-            if (main.config.getBoolean("rankup-fireworks")) {
+            if (main.getConfig().getBoolean("rankup-fireworks")) {
                 new BukkitRunnable() {
 
                     int i = 8;
@@ -178,7 +178,7 @@ public class RankupInventory extends FastInv {
     }
 
     private int getNextRankPrice(int level) {
-        ConfigurationSection section = main.levels.getConfigurationSection("levels." + (level + 1));
+        ConfigurationSection section = main.getLevelsConfig().getConfigurationSection("levels." + (level + 1));
 
         return section != null ? section.getInt("cost") : -1;
     }

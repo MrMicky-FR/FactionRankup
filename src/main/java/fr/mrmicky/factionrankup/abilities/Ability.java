@@ -32,7 +32,7 @@ public class Ability {
         int level = FactionRankup.getInstance().getFactionLevel(p);
 
         for (int i = level; i > 0; i--) {
-            ConfigurationSection conf = FactionRankup.getInstance().levels.getConfigurationSection("levels." + i + ".ability");
+            ConfigurationSection conf = FactionRankup.getInstance().getLevelsConfig().getConfigurationSection("levels." + i + ".ability");
             if (conf != null && conf.getString("type").equalsIgnoreCase("custom")
                     && conf.getString("name").equalsIgnoreCase(name)) {
                 return !conf.contains("chances") || RANDOM.nextInt(100) < conf.getInt("chances");
