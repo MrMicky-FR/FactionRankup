@@ -11,12 +11,13 @@ import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.Facti
 import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
+import fr.mrmicky.factionrankup.storage.StorageManager;
 import fr.mrmicky.factionrankup.utils.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Level;
+import java.util.Objects;
 
 public class FactionRankup extends JavaPlugin {
 
@@ -27,10 +28,10 @@ public class FactionRankup extends JavaPlugin {
     private static FactionRankup instance;
 
     private FactionType factionType = FactionType.FACTIONS;
+    private StorageManager storageManager;
 
     private ConfigWrapper levels;
     private ConfigWrapper messages;
-    private ConfigWrapper data;
 
     public static FactionRankup getInstance() {
         return instance;
@@ -53,7 +54,6 @@ public class FactionRankup extends JavaPlugin {
         saveDefaultConfig();
         levels = new ConfigWrapper(this, "levels.yml");
         messages = new ConfigWrapper(this, "messages.yml");
-        data = new ConfigWrapper(this, "data.yml");
 
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
@@ -97,6 +97,13 @@ public class FactionRankup extends JavaPlugin {
         }
     }
 
+    @Override
+    public void onDisable() {
+        if (storageManager != null && storageManager.getProvider() != null) {
+            storageManager.getProvider().shutdown();
+        }
+    }
+
     private void start(Checker c) {
         switch (factionType) {
             case FACTIONS:
@@ -114,6 +121,8 @@ public class FactionRankup extends JavaPlugin {
         }
 
         new AbilitiesTask(this);
+
+        storageManager = new StorageManager(this);
 
         getServer().getPluginManager().registerEvents(new RankupListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilitiesListener(this), this);
@@ -143,33 +152,48 @@ public class FactionRankup extends JavaPlugin {
         return ChatUtils.color(messages.getConfig().getString(key).replace("%prefix%", messages.getConfig().getString("prefix")));
     }
 
+    /*
+     * Level management
+     */
     public void setFactionLevel(Player p, int level) {
+        Objects.requireNonNull(p);
         setFactionLevel(Compatibility.get().getFactionByPlayer(p), level);
     }
 
     public void setFactionLevel(IFaction faction, int level) {
-        setFactionLevel(faction.getName(), level);
+        if (faction != null) {
+            setFactionLevelById(faction.getId(), level);
+        }
     }
 
-    public void setFactionLevel(String faction, int level) {
-        data.getConfig().set("Factions." + faction + ".Level", level);
-        data.save();
+    public void setFactionLevelById(String factionId, int level) {
+        storageManager.setFactionLevel(factionId, level);
     }
 
-    public void removeFactionLevel(String faction) {
-        data.getConfig().set("Factions." + faction, null);
-        data.save();
+    public void deleteFactionLevel(IFaction faction) {
+        storageManager.deleteFaction(faction.getId());
     }
 
     public int getFactionLevel(Player p) {
+        Objects.requireNonNull(p);
         return getFactionLevel(Compatibility.get().getFactionByPlayer(p));
     }
 
     public int getFactionLevel(IFaction faction) {
-        return getFactionLevel(faction.getName());
+        return faction != null ? getFactionLevelById(faction.getId()) : 0;
     }
 
-    public int getFactionLevel(String faction) {
-        return data.getConfig().getInt("Factions." + faction + ".Level");
+    public int getFactionLevelById(String factionId) {
+        return storageManager.getFactionLevels().getOrDefault(factionId, 0);
+    }
+
+    @Deprecated
+    public void setFactionLevel(String factionName, int level) {
+        setFactionLevel(Compatibility.get().getFactionByName(factionName), level);
+    }
+
+    @Deprecated
+    public int getFactionLevel(String factionName) {
+        return getFactionLevel(Compatibility.get().getFactionByName(factionName));
     }
 }

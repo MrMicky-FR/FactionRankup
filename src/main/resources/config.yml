@@ -1,6 +1,14 @@
 # Don't touch this :)
 config-version: 2
 
+sql:
+  enabled: false
+  address: "localhost"
+  database: "base"
+  username: "root"
+  password: "secret"
+  port: 3306
+
 rankup-fireworks: true
 
 max-members-level-0: 2

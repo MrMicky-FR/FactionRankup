@@ -21,10 +21,6 @@ public class FactionsListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    protected void handleCreate(String faction) {
-        main.setFactionLevel(faction, 0);
-    }
-
     protected void handleJoin(Player p, IFaction faction, int playersSize, Cancellable event) {
         int level = main.getFactionLevel(faction);
         int max = level <= 0 ? main.getConfig().getInt("max-members-level-0") : main.getLevelsConfig().getInt("levels." + level + ".max-members");
@@ -35,12 +31,6 @@ public class FactionsListener implements Listener {
                     .replace("%maxplayers%", String.valueOf(max)));
             event.setCancelled(true);
         }
-    }
-
-    protected void handleRename(String oldName, String newName) {
-        int level = main.getFactionLevel(oldName);
-        main.removeFactionLevel(oldName);
-        main.setFactionLevel(newName, level);
     }
 
     protected void handleDisband(IFaction faction) {
@@ -56,6 +46,6 @@ public class FactionsListener implements Listener {
 
         faction.getPlayers().forEach(p -> effects.forEach(p::removePotionEffect));
 
-        main.removeFactionLevel(faction.getName());
+        main.deleteFactionLevel(faction);
     }
 }
