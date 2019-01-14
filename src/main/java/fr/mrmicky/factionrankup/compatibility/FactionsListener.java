@@ -1,7 +1,6 @@
 package fr.mrmicky.factionrankup.compatibility;
 
 import fr.mrmicky.factionrankup.FactionRankup;
-import fr.mrmicky.factionrankup.utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -30,10 +29,10 @@ public class FactionsListener implements Listener {
         int level = main.getFactionLevel(faction);
         int max = level <= 0 ? main.config.getInt("max-members-level-0") : main.levels.getInt("levels." + level + ".max-members");
         if (playersSize >= max) {
-            p.sendMessage(Messages.getMessage(main.messages.getString("max-players")
+            p.sendMessage(main.getMessage("max-players")
                     .replace("%faction%", faction.getName())
                     .replace("%next_level%", String.valueOf(level + 1))
-                    .replace("%maxplayers%", String.valueOf(max))));
+                    .replace("%maxplayers%", String.valueOf(max)));
             event.setCancelled(true);
         }
     }

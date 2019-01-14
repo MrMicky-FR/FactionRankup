@@ -1,8 +1,7 @@
 package fr.mrmicky.factionrankup.listeners;
 
 import fr.mrmicky.factionrankup.FactionRankup;
-import fr.mrmicky.factionrankup.utils.Messages;
-import org.bukkit.Bukkit;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +32,9 @@ public class RankupListener implements Listener {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         if (main.config.getBoolean("level-in-chat")) {
-            String format = Messages.color(main.config.getString("chat-prefix")).replace("%level%", String.valueOf(main.getFactionLevel(e.getPlayer())));
+            int level = main.getFactionLevel(e.getPlayer());
+
+            String format = ChatUtils.color(main.getConfig().getString("chat-prefix")).replace("%level%", String.valueOf(level));
             e.setFormat(format + e.getFormat());
         }
     }

@@ -57,8 +57,7 @@ public class Checker {
                 || !m.getDescription().getAuthors().toString().equals("[MrMicky, Vouchs]")) {
             valid = false;
             m.getLogger().severe(" ");
-            m.getLogger().severe(
-                    "THE PLUGIN.YML HAS BEEN EDITED (NAME OR AUTHOR) ! PLEASE DOWNLOAD THE PLUGIN FROM SPIGOTMC AGAIN !");
+            m.getLogger().severe("THE PLUGIN.YML HAS BEEN EDITED (NAME OR AUTHOR) ! PLEASE DOWNLOAD THE PLUGIN FROM SPIGOTMC AGAIN !");
             m.getLogger().severe("***THE PLUGIN WILL DISABLE***");
             m.getLogger().severe(" ");
             Bukkit.getPluginManager().disablePlugin(m);
@@ -69,8 +68,7 @@ public class Checker {
         try {
             URL url = new URL("https://www.spigotmc.org/members/" + FactionRankup.USER_ID);
             URLConnection connection = url.openConnection();
-            connection.setRequestProperty("User-Agent",
-                    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String inputLine;

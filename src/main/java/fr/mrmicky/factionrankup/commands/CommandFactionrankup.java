@@ -2,7 +2,7 @@ package fr.mrmicky.factionrankup.commands;
 
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.utils.ConfigHandler;
-import fr.mrmicky.factionrankup.utils.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,9 +32,9 @@ public class CommandFactionrankup implements CommandExecutor, TabExecutor {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("factionranking.reload") || sender.hasPermission("factionrankup.reload")) {
                     ConfigHandler.loadAll();
-                    sender.sendMessage(Messages.getMessage("You have reloaded the configurations files."));
+                    sender.sendMessage("§3You have reloaded the configurations files.");
                 } else {
-                    sender.sendMessage(Messages.getMessage(main.messages.getString("no-permission")));
+                    sender.sendMessage(main.getMessage("no-permission"));
                 }
             } else if (args[0].equalsIgnoreCase("about")) {
                 sender.sendMessage("§7§m------------------------------");

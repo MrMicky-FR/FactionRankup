@@ -3,7 +3,6 @@ package fr.mrmicky.factionrankup.listeners;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.abilities.Ability;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
-import fr.mrmicky.factionrankup.utils.Messages;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -123,7 +122,7 @@ public class AbilitiesListener implements Listener {
 
     private void sendActionbar(Player p, String s) {
         if (!s.isEmpty()) {
-            Titles.sendActionBar(p, Messages.color(main.messages.getString(s)));
+            Titles.sendActionBar(p, main.getMessage(s));
         }
     }
 }

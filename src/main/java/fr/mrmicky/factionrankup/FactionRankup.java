@@ -124,6 +124,10 @@ public class FactionRankup extends JavaPlugin {
         return factionType;
     }
 
+    public String getMessage(String key) {
+        return ChatUtils.color(messages.getString(key).replace("%prefix%", messages.getString("prefix")));
+    }
+
     private void registerConfigurations() {
         try {
             ConfigHandler.registerConfig("data", "data.yml", this);

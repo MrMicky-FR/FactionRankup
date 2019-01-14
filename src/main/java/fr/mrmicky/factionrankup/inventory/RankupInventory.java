@@ -3,14 +3,11 @@ package fr.mrmicky.factionrankup.inventory;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
 import fr.mrmicky.factionrankup.utils.FastInv;
-import fr.mrmicky.factionrankup.utils.Messages;
 import fr.mrmicky.factionrankup.utils.Titles;
 import fr.mrmicky.factionrankup.utils.Version;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -34,7 +31,7 @@ public class RankupInventory extends FastInv {
     private static final Random RANDOM = new Random();
 
     public RankupInventory(FactionRankup main, Player p) {
-        super(54, Messages.color(main.config.getString("rankup-inventory.name")));
+        super(54, ChatUtils.color(main.config.getString("rankup-inventory.name")));
         this.main = main;
         this.faction = Compatibility.get().getFactionByPlayer(p);
 
@@ -67,7 +64,7 @@ public class RankupInventory extends FastInv {
 
                 UnaryOperator<String> replaceItem = s -> {
                     s = s.replace("%ability%", levelItem.getString("name"));
-                    s = s.replace("%state%", main.messages.getString(unlocked ? "unlocked" : "locked"));
+                    s = s.replace("%state%", main.getMessage(unlocked ? "unlocked" : "locked"));
                     s = s.replace("%max_members%", String.valueOf(levelItem.getInt("max-members")));
                     s = s.replace("%ability%", levelItem.getString("name"));
                     s = s.replace("%level%", levelString);
@@ -104,7 +101,7 @@ public class RankupInventory extends FastInv {
         int price = getNextRankPrice(level);
 
         if (price == -1) {
-            p.sendMessage(Messages.getMessage(main.messages.getString("max-level")));
+            p.sendMessage(main.getMessage("max-level"));
             p.closeInventory();
             return;
         }
@@ -134,22 +131,22 @@ public class RankupInventory extends FastInv {
                 }.runTaskTimer(main, 10, 10);
             }
 
-            String title = Messages.color(main.messages.getString("rankup.title"));
-            String subtitle = Messages.color(main.messages.getString("rankup.subtitle"));
+            String title = main.getMessage("rankup.title");
+            String subtitle = main.getMessage("rankup.subtitle");
             Titles.sendTitle(p, title, subtitle, 5, 30, 5);
 
-            String message = main.messages.getString("rankup.chat");
+            String message = main.getMessage("rankup.chat");
             if (!message.isEmpty()) {
-                faction.getPlayers().forEach(
-                        ps -> ps.sendMessage(Messages.getMessage(replacePlaceholder(p, message, faction.getName(), level))));
+                String messageReplaced = replacePlaceholder(p, main.getMessage("rankup.chat"), faction.getName(), level);
+                faction.getPlayers().forEach(ps -> ps.sendMessage(messageReplaced));
             }
 
-            String bc = main.messages.getString("rankup.broadcast");
+            String bc = main.getMessage("rankup.broadcast");
             if (!bc.isEmpty()) {
-                Bukkit.broadcastMessage(Messages.getMessage(replacePlaceholder(p, bc, faction.getName(), level)));
+                Bukkit.broadcastMessage(replacePlaceholder(p, bc, faction.getName(), level));
             }
         } else {
-            p.sendMessage(Messages.getMessage(main.messages.getString("no-money")));
+            p.sendMessage(main.getMessage("no-money"));
             p.closeInventory();
         }
     }
@@ -172,9 +169,9 @@ public class RankupInventory extends FastInv {
             lore.replaceAll(replaces);
         }
 
-        lore.replaceAll(Messages::color);
+        lore.replaceAll(ChatUtils::color);
 
-        meta.setDisplayName(Messages.color("&f" + name));
+        meta.setDisplayName(ChatColor.WHITE + ChatUtils.color(name));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;

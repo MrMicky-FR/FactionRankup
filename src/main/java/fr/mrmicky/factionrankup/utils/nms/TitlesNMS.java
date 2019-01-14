@@ -1,6 +1,5 @@
 package fr.mrmicky.factionrankup.utils.nms;
 
-import fr.mrmicky.factionrankup.utils.Messages;
 import fr.mrmicky.factionrankup.utils.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -101,8 +100,6 @@ public class TitlesNMS {
         if (message == null || message.isEmpty()) {
             return;
         }
-
-        message = Messages.getMessage(message);
 
         if (Version.V1_7_R4.isVersionOrLower()) {
             p.sendMessage(message);

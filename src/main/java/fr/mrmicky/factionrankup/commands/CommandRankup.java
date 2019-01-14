@@ -3,7 +3,7 @@ package fr.mrmicky.factionrankup.commands;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.inventory.RankupInventory;
-import fr.mrmicky.factionrankup.utils.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,12 +19,12 @@ public class CommandRankup implements CommandExecutor {
 
     public static void execute(FactionRankup main, Player p) {
         if (!p.hasPermission("factionranking.openmenu") && !p.hasPermission("factionrankup.use")) {
-            p.sendMessage(Messages.getMessage(main.messages.getString("no-permission")));
+            p.sendMessage(main.getMessage("no-permission"));
             return;
         }
 
         if (!Compatibility.get().hasFaction(p)) {
-            p.sendMessage(Messages.getMessage(main.messages.getString("no-faction")));
+            p.sendMessage(main.getMessage("no-faction"));
             return;
         }
 
@@ -34,7 +34,7 @@ public class CommandRankup implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Messages.getMessage("Console cannot execute this command"));
+            sender.sendMessage(ChatColor.RED + "Console cannot execute this command");
             return true;
         }
 

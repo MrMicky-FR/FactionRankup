@@ -14,7 +14,7 @@ public class FactionRankupCommand {
     }
 
     public static String getRankupHelp() {
-        return FactionRankup.getInstance().messages.getString("f-rankup-help");
+        return FactionRankup.getInstance().getMessage("f-rankup-help");
     }
 
     public static List<String> getRankupAliases() {
