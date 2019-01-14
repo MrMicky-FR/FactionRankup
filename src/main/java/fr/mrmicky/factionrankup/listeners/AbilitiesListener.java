@@ -32,8 +32,6 @@ public class AbilitiesListener implements Listener {
 
     public AbilitiesListener(FactionRankup main) {
         this.main = main;
-
-        Bukkit.getPluginManager().registerEvents(this, main);
     }
 
     @EventHandler

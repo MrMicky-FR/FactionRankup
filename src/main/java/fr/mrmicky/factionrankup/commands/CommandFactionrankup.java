@@ -19,7 +19,6 @@ public class CommandFactionrankup implements CommandExecutor, TabExecutor {
 
     public CommandFactionrankup(FactionRankup main) {
         this.main = main;
-        main.getCommand("factionrankup").setExecutor(this);
     }
 
     @Override

@@ -15,8 +15,6 @@ public class RankupListener implements Listener {
 
     public RankupListener(FactionRankup main) {
         this.main = main;
-
-        Bukkit.getPluginManager().registerEvents(this, main);
     }
 
     @EventHandler

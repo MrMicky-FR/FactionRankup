@@ -15,8 +15,6 @@ public class CommandRankup implements CommandExecutor {
 
     public CommandRankup(FactionRankup main) {
         this.main = main;
-
-        main.getCommand("rankup").setExecutor(this);
     }
 
     public static void execute(FactionRankup main, Player p) {

@@ -110,13 +110,11 @@ public class FactionRankup extends JavaPlugin {
 
         new AbilitiesTask(this);
 
-        new RankupListener(this);
-        new AbilitiesListener(this);
+        getServer().getPluginManager().registerEvents(new RankupListener(this), this);
+        getServer().getPluginManager().registerEvents(new AbilitiesListener(this), this);
 
-        new CommandRankup(this);
-        new CommandFactionrankup(this);
-
-        registerNewFactions();
+        getCommand("frankup").setExecutor(new CommandRankup(this));
+        getCommand("factionrankup").setExecutor(new CommandFactionrankup(this));
 
         getLogger().info("Thank you " + c.getUsername() + "for purchasing FactionRankup :)");
         getLogger().info("The plugin has been successfully activated");
