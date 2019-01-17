@@ -14,7 +14,10 @@ import fr.mrmicky.factionrankup.inventory.FastInv;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.storage.StorageManager;
-import fr.mrmicky.factionrankup.utils.*;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
+import fr.mrmicky.factionrankup.utils.Checker;
+import fr.mrmicky.factionrankup.utils.ConfigWrapper;
+import fr.mrmicky.factionrankup.utils.MigrationV2toV3;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +53,7 @@ public class FactionRankup extends JavaPlugin {
 
         FastInv.init(this);
 
-        MigrationV2toV3.migrate(this);
+        MigrationV2toV3.migrateV2toV3(this);
 
         saveDefaultConfig();
         levels = new ConfigWrapper(this, "levels.yml");
@@ -120,6 +123,8 @@ public class FactionRankup extends JavaPlugin {
                 Compatibility.setFactionManager(new LegacyFactionsManager());
                 break;
         }
+
+        MigrationV2toV3.migrateV3_1toV3_2(this);
 
         new AbilitiesTask(this);
 
