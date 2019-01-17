@@ -1,5 +1,6 @@
 package fr.mrmicky.factionrankup;
 
+import fr.mrmicky.factionrankup.abilities.AbilitiesTask;
 import fr.mrmicky.factionrankup.commands.CommandFactionrankup;
 import fr.mrmicky.factionrankup.commands.CommandRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;

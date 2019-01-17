@@ -1,6 +1,5 @@
 package fr.mrmicky.factionrankup.utils.nms;
 
-import fr.mrmicky.factionrankup.utils.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -47,6 +46,7 @@ public class TitlesNMS {
             Class<?> packetTitleClass = getClassNMS("PacketPlayOutTitle");
             Class<?> packetTitleAction = getClassNMS("PacketPlayOutTitle$EnumTitleAction");
             Class<?> packetChatClass = getClassNMS("PacketPlayOutChat");
+            Class<?> chatMessageType;
 
             MESSAGE_FROM_STRING = craftChatMessageClass.getDeclaredMethod("fromString", String.class);
             CHAT_COMPONENT_CLASS = getClassNMS("IChatBaseComponent");
@@ -60,13 +60,18 @@ public class TitlesNMS {
             TITLE_ACTION_TITLE = packetTitleAction.getEnumConstants()[0];
             TITLE_ACTION_SUBTITLE = packetTitleAction.getEnumConstants()[0];
 
-            if (Version.V1_12_R1.isVersionOrHigher()) {
-                CHAT_ACTION_ACTIONBAR = null;
-                PACKET_CHAT = packetChatClass.getConstructor(CHAT_COMPONENT_CLASS, byte.class);
-            } else {
-                Class<?> chatMessageType = getClassNMS("ChatMessageType");
+            try {
+                chatMessageType = getClassNMS("ChatMessageType");
+            } catch (ClassNotFoundException e) {
+                chatMessageType = null;
+            }
+
+            if (chatMessageType != null) {
                 CHAT_ACTION_ACTIONBAR = chatMessageType.getEnumConstants()[2];
                 PACKET_CHAT = packetChatClass.getConstructor(CHAT_COMPONENT_CLASS, chatMessageType);
+            } else {
+                CHAT_ACTION_ACTIONBAR = null;
+                PACKET_CHAT = packetChatClass.getConstructor(CHAT_COMPONENT_CLASS, byte.class);
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
@@ -74,10 +79,6 @@ public class TitlesNMS {
     }
 
     public static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        if (Version.V1_7_R4.isVersionOrLower()) {
-            return;
-        }
-
         try {
             if (title != null) {
                 Object packetTitle = PACKET_TITLE.newInstance(TITLE_ACTION_TITLE, getChatBaseComponent(title));
@@ -98,11 +99,6 @@ public class TitlesNMS {
 
     public static void sendActionbar(Player p, String message) {
         if (message == null || message.isEmpty()) {
-            return;
-        }
-
-        if (Version.V1_7_R4.isVersionOrLower()) {
-            p.sendMessage(message);
             return;
         }
 

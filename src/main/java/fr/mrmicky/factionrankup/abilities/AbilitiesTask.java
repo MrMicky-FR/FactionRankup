@@ -1,4 +1,4 @@
-package fr.mrmicky.factionrankup.utils;
+package fr.mrmicky.factionrankup.abilities;
 
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
