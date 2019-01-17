@@ -3,6 +3,7 @@ package fr.mrmicky.factionrankup.inventory;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
+import fr.mrmicky.factionrankup.event.FactionRankupEvent;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.*;
@@ -105,9 +106,18 @@ public class RankupInventory extends FastInv {
         }
 
         if (faction.hasMoney(price)) {
-            main.setFactionLevel(faction, level + 1);
-            faction.removeMoney(price);
             p.closeInventory();
+
+            FactionRankupEvent event = new FactionRankupEvent(faction, level, level + 1);
+
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) {
+                return;
+            }
+
+            main.setFactionLevel(faction, event.getNewLevel());
+            faction.removeMoney(price);
 
             if (main.getConfig().getBoolean("rankup-fireworks")) {
                 new BukkitRunnable() {
