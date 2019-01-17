@@ -23,6 +23,7 @@ public class TitlesNMS {
     // Utils
     private static final Class<?> CHAT_COMPONENT_CLASS;
     private static final Method MESSAGE_FROM_STRING;
+    private static final Constructor<?> CHAT_COMPONENT_TEXT;
 
     // Packets
     private static final Constructor<?> PACKET_TITLE;
@@ -48,6 +49,8 @@ public class TitlesNMS {
             Class<?> packetChatClass = getClassNMS("PacketPlayOutChat");
             Class<?> chatMessageType;
 
+            CHAT_COMPONENT_TEXT = getClassNMS("ChatComponentText").getConstructor(String.class);
+
             MESSAGE_FROM_STRING = craftChatMessageClass.getDeclaredMethod("fromString", String.class);
             CHAT_COMPONENT_CLASS = getClassNMS("IChatBaseComponent");
 
@@ -58,7 +61,7 @@ public class TitlesNMS {
             PACKET_TITLE = packetTitleClass.getConstructor(packetTitleAction, CHAT_COMPONENT_CLASS);
             PACKET_TITLE_TIME = packetTitleClass.getConstructor(int.class, int.class, int.class);
             TITLE_ACTION_TITLE = packetTitleAction.getEnumConstants()[0];
-            TITLE_ACTION_SUBTITLE = packetTitleAction.getEnumConstants()[0];
+            TITLE_ACTION_SUBTITLE = packetTitleAction.getEnumConstants()[1];
 
             try {
                 chatMessageType = getClassNMS("ChatMessageType");
@@ -85,7 +88,7 @@ public class TitlesNMS {
                 sendPacket(p, packetTitle);
             }
 
-            if (title != null) {
+            if (subtitle != null) {
                 Object packetSubtitle = PACKET_TITLE.newInstance(TITLE_ACTION_SUBTITLE, getChatBaseComponent(subtitle));
                 sendPacket(p, packetSubtitle);
             }
@@ -103,7 +106,8 @@ public class TitlesNMS {
         }
 
         try {
-            Object packet = PACKET_CHAT.newInstance(getChatBaseComponent(message), CHAT_ACTION_ACTIONBAR == null ? (byte) 2 : CHAT_ACTION_ACTIONBAR);
+            Object component = CHAT_COMPONENT_TEXT.newInstance(message);
+            Object packet = PACKET_CHAT.newInstance(component, CHAT_ACTION_ACTIONBAR == null ? (byte) 2 : CHAT_ACTION_ACTIONBAR);
             sendPacket(p, packet);
         } catch (Exception e) {
             e.printStackTrace();

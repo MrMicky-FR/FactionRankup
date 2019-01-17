@@ -94,9 +94,14 @@ public class MigrationV2toV3 {
                     File f = new File(plugin.getDataFolder(), "invalid-factions.txt");
 
                     try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f)))) {
+                        writer.println("# Some factions was invalid during migration");
+                        writer.println('#');
+
                         unknownFactions.forEach((fac, lvl) -> writer.println(fac + ':' + lvl));
                     }
                 }
+
+                plugin.getLogger().info("Migration done !");
             }
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Error during migration", e);
