@@ -26,8 +26,10 @@ public class Checker {
     }
 
     private void checkValid() {
+        String link = String.format("https://mrmicky.fr/verify.php?plugin=%s&uid=%s&nonce=%s&version=%s&fac=%s", m.getName(), FactionRankup.USER_ID, FactionRankup.NONCE_ID, m.getDescription().getVersion(), m.getFactionType());
+
         try {
-            URL url = new URL(String.format("https://mrmicky.fr/verify.php?plugin=%s&uid=%s&nonce=%s&version=%s", m.getName(), FactionRankup.USER_ID, FactionRankup.NONCE_ID, m.getDescription().getVersion()));
+            URL url = new URL(link);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
             String inputLine;
             StringBuilder str = new StringBuilder();

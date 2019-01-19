@@ -1,6 +1,8 @@
 package fr.mrmicky.factionrankup.commands;
 
 import fr.mrmicky.factionrankup.FactionRankup;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,26 +24,20 @@ public class CommandFactionrankup implements CommandExecutor, TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("§7§m------------------------------");
-            sender.sendMessage("§3/factionrankup about");
-            sender.sendMessage("§3/factionrankup reload");
-            sender.sendMessage("§7§m------------------------------");
+            sender.sendMessage(ChatUtils.color("&bFactionRankup &7version &b" + main.getDescription().getVersion()));
+            sender.sendMessage(ChatUtils.color("&7Download: &b" + main.getDescription().getWebsite()));
+            sender.sendMessage(ChatUtils.color("&7ID: &b" + FactionRankup.USER_ID + "&7//&b" + FactionRankup.NONCE_ID));
+            sender.sendMessage(ChatUtils.color("&8- &3/factionrankup reload"));
         } else {
             if (args[0].equalsIgnoreCase("reload")) {
-                if (sender.hasPermission("factionranking.reload") || sender.hasPermission("factionrankup.reload")) {
+                if (sender.hasPermission("factionrankup.reload")) {
                     main.reloadAllConfigs();
-                    sender.sendMessage("§3You have reloaded the configurations files.");
+                    sender.sendMessage(ChatColor.DARK_AQUA + "You have reloaded the configurations files.");
                 } else {
                     sender.sendMessage(main.getMessage("no-permission"));
                 }
-            } else if (args[0].equalsIgnoreCase("about")) {
-                sender.sendMessage("§7§m------------------------------");
-                sender.sendMessage("§7Download: §3" + main.getDescription().getWebsite());
-                sender.sendMessage("§7Author: §3" + main.getDescription().getAuthors().get(0));
-                sender.sendMessage("§7Version: §3" + main.getDescription().getVersion());
-                sender.sendMessage("§7ID: §3" + FactionRankup.USER_ID);
-                sender.sendMessage("§7Nonce: §3" + FactionRankup.NONCE_ID);
-                sender.sendMessage("§7§m------------------------------");
+            } else {
+                sender.sendMessage(ChatColor.RED + "Usage: /factionrankup <reload>");
             }
         }
         return true;
@@ -51,8 +47,7 @@ public class CommandFactionrankup implements CommandExecutor, TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (args.length == 1) {
             List<String> completions = new ArrayList<>();
-            completions.add("about");
-            if (sender.hasPermission("factionranking.reload") || sender.hasPermission("factionrankup.reload")) {
+            if (sender.hasPermission("factionrankup.reload")) {
                 completions.add("reload");
             }
 
