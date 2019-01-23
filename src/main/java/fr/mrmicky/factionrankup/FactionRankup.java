@@ -14,10 +14,7 @@ import fr.mrmicky.factionrankup.inventory.FastInv;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.storage.StorageManager;
-import fr.mrmicky.factionrankup.utils.ChatUtils;
-import fr.mrmicky.factionrankup.utils.Checker;
-import fr.mrmicky.factionrankup.utils.ConfigWrapper;
-import fr.mrmicky.factionrankup.utils.MigrationV2toV3;
+import fr.mrmicky.factionrankup.utils.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,15 +58,10 @@ public class FactionRankup extends JavaPlugin {
 
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
-                try {
-                    Class.forName("de.erethon.factionsone.FactionsOneAPI");
+                if (VersionUtils.getClass("de.erethon.factionsone.FactionsOneAPI").isPresent()) {
                     factionType = FactionType.FACTIONS_ONE;
-                } catch (ClassNotFoundException ignored) {
-                    try {
-                        Class.forName("com.massivecraft.factions.FPlayer");
-                        factionType = FactionType.FACTIONS_UUID;
-                    } catch (ClassNotFoundException ignored1) {
-                    }
+                } else if (VersionUtils.getClass("com.massivecraft.factions.FPlayer").isPresent()){
+                    factionType = FactionType.FACTIONS_UUID;
                 }
             } else if (getServer().getPluginManager().getPlugin("LegacyFactions") != null) {
                 factionType = FactionType.LEGACY_FACTIONS;
