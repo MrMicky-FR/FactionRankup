@@ -58,9 +58,9 @@ public class FactionRankup extends JavaPlugin {
 
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
-                if (VersionUtils.getClass("de.erethon.factionsone.FactionsOneAPI").isPresent()) {
+                if (FastReflection.optionalClass("de.erethon.factionsone.FactionsOneAPI").isPresent()) {
                     factionType = FactionType.FACTIONS_ONE;
-                } else if (VersionUtils.getClass("com.massivecraft.factions.FPlayer").isPresent()){
+                } else if (FastReflection.optionalClass("com.massivecraft.factions.FPlayer").isPresent()) {
                     factionType = FactionType.FACTIONS_UUID;
                 }
             } else if (getServer().getPluginManager().getPlugin("LegacyFactions") != null) {

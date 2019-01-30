@@ -8,7 +8,7 @@ import com.massivecraft.factions.zcore.util.TL;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.FactionRankupCommand;
 import fr.mrmicky.factionrankup.compatibility.FactionType;
-import fr.mrmicky.factionrankup.utils.VersionUtils;
+import fr.mrmicky.factionrankup.utils.FastReflection;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -29,7 +29,7 @@ public class FactionsUUIDCommand extends FCommand {
 
         FCmdRoot cmdBase;
 
-        if (VersionUtils.getClass("com.massivecraft.factions.P").isPresent()) {
+        if (FastReflection.optionalClass("com.massivecraft.factions.P").isPresent()) {
             cmdBase = P.p.cmdBase;
         } else {
             try {

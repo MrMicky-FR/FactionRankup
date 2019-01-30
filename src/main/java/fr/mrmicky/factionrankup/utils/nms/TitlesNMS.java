@@ -1,6 +1,6 @@
 package fr.mrmicky.factionrankup.utils.nms;
 
-import org.bukkit.Bukkit;
+import fr.mrmicky.factionrankup.utils.FastReflection;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Array;
@@ -8,12 +8,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * @author MrMicky
+ */
 public class TitlesNMS {
-
-    private static final String PACKAGE_NMS = "net.minecraft.server.";
-    private static final String PACKAGE_OCB = "org.bukkit.craftbukkit.";
-
-    private static final String VERSION;
 
     // Packet sending
     private static final Field PLAYER_CONNECTION;
@@ -35,28 +33,26 @@ public class TitlesNMS {
     private static final Constructor<?> PACKET_CHAT;
 
     static {
-        VERSION = Bukkit.getServer().getClass().getPackage().getName().substring(PACKAGE_OCB.length());
-
         try {
-            Class<?> craftChatMessageClass = getClassOCB("util.CraftChatMessage");
+            Class<?> craftChatMessageClass = FastReflection.obcClass("util.CraftChatMessage");
 
-            Class<?> entityPlayerClass = getClassNMS("EntityPlayer");
-            Class<?> playerConnectionClass = getClassNMS("PlayerConnection");
-            Class<?> craftPlayerClass = getClassOCB("entity.CraftPlayer");
+            Class<?> entityPlayerClass = FastReflection.nmsClass("EntityPlayer");
+            Class<?> playerConnectionClass = FastReflection.nmsClass("PlayerConnection");
+            Class<?> craftPlayerClass = FastReflection.obcClass("entity.CraftPlayer");
 
-            Class<?> packetTitleClass = getClassNMS("PacketPlayOutTitle");
-            Class<?> packetTitleAction = getClassNMS("PacketPlayOutTitle$EnumTitleAction");
-            Class<?> packetChatClass = getClassNMS("PacketPlayOutChat");
+            Class<?> packetTitleClass = FastReflection.nmsClass("PacketPlayOutTitle");
+            Class<?> packetTitleAction = FastReflection.nmsClass("PacketPlayOutTitle$EnumTitleAction");
+            Class<?> packetChatClass = FastReflection.nmsClass("PacketPlayOutChat");
             Class<?> chatMessageType;
 
-            CHAT_COMPONENT_TEXT = getClassNMS("ChatComponentText").getConstructor(String.class);
+            CHAT_COMPONENT_TEXT = FastReflection.nmsClass("ChatComponentText").getConstructor(String.class);
 
             MESSAGE_FROM_STRING = craftChatMessageClass.getDeclaredMethod("fromString", String.class);
-            CHAT_COMPONENT_CLASS = getClassNMS("IChatBaseComponent");
+            CHAT_COMPONENT_CLASS = FastReflection.nmsClass("IChatBaseComponent");
 
             PLAYER_GET_HANDLE = craftPlayerClass.getDeclaredMethod("getHandle");
             PLAYER_CONNECTION = entityPlayerClass.getDeclaredField("playerConnection");
-            SEND_PACKET = playerConnectionClass.getDeclaredMethod("sendPacket", getClassNMS("Packet"));
+            SEND_PACKET = playerConnectionClass.getDeclaredMethod("sendPacket", FastReflection.nmsClass("Packet"));
 
             PACKET_TITLE = packetTitleClass.getConstructor(packetTitleAction, CHAT_COMPONENT_CLASS);
             PACKET_TITLE_TIME = packetTitleClass.getConstructor(int.class, int.class, int.class);
@@ -64,7 +60,7 @@ public class TitlesNMS {
             TITLE_ACTION_SUBTITLE = packetTitleAction.getEnumConstants()[1];
 
             try {
-                chatMessageType = getClassNMS("ChatMessageType");
+                chatMessageType = FastReflection.nmsClass("ChatMessageType");
             } catch (ClassNotFoundException e) {
                 chatMessageType = null;
             }
@@ -77,7 +73,7 @@ public class TitlesNMS {
                 PACKET_CHAT = packetChatClass.getConstructor(CHAT_COMPONENT_CLASS, byte.class);
             }
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw new ExceptionInInitializerError(e);
         }
     }
 
@@ -93,15 +89,14 @@ public class TitlesNMS {
                 sendPacket(p, packetSubtitle);
             }
 
-            Object packetTimes = PACKET_TITLE_TIME.newInstance(fadeIn, stay, fadeOut);
-            sendPacket(p, packetTimes);
+            sendPacket(p, PACKET_TITLE_TIME.newInstance(fadeIn, stay, fadeOut));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void sendActionbar(Player p, String message) {
-        if (message == null || message.isEmpty()) {
+        if (message == null) {
             return;
         }
 
@@ -122,13 +117,5 @@ public class TitlesNMS {
         Object entityPlayer = PLAYER_GET_HANDLE.invoke(p);
         Object playerConnection = PLAYER_CONNECTION.get(entityPlayer);
         SEND_PACKET.invoke(playerConnection, packet);
-    }
-
-    private static Class<?> getClassNMS(String name) throws ClassNotFoundException {
-        return Class.forName(PACKAGE_NMS + VERSION + '.' + name);
-    }
-
-    private static Class<?> getClassOCB(String name) throws ClassNotFoundException {
-        return Class.forName(PACKAGE_OCB + VERSION + '.' + name);
     }
 }

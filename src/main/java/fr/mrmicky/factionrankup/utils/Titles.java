@@ -7,6 +7,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+/**
+ * @author MrMicky
+ */
 public class Titles {
 
     private static boolean supportSendTitle;
