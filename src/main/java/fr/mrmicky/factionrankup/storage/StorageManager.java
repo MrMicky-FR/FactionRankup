@@ -15,12 +15,9 @@ import java.util.Map;
 public class StorageManager {
 
     private Map<String, Integer> factionLevels = new HashMap<>();
-    private FactionRankup plugin;
     private StorageProvider provider;
 
     public StorageManager(FactionRankup plugin) {
-        this.plugin = plugin;
-
         ConfigurationSection sqlSection = plugin.getConfig().getConfigurationSection("sql");
 
         if (sqlSection.getBoolean("enabled")) {

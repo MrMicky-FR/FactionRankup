@@ -6,20 +6,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+/**
+ * @author MrMicky
+ */
 public class RankupListener implements Listener {
 
-    private FactionRankup main;
+    private FactionRankup plugin;
 
-    public RankupListener(FactionRankup main) {
-        this.main = main;
+    public RankupListener(FactionRankup plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        if (main.getConfig().getBoolean("level-in-chat")) {
-            int level = main.getFactionLevel(e.getPlayer());
+        if (plugin.getConfig().getBoolean("level-in-chat")) {
+            int level = plugin.getFactionLevel(e.getPlayer());
 
-            String format = ChatUtils.color(main.getConfig().getString("chat-prefix")).replace("%level%", String.valueOf(level));
+            String format = ChatUtils.color(plugin.getConfig().getString("chat-prefix")).replace("%level%", String.valueOf(level));
             e.setFormat(format + e.getFormat());
         }
     }

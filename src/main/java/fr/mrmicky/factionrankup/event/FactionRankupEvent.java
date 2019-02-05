@@ -35,10 +35,6 @@ public class FactionRankupEvent extends Event implements Cancellable {
         return newLevel;
     }
 
-    public void setNewLevel(int newLevel) {
-        this.newLevel = newLevel;
-    }
-
     @Override
     public boolean isCancelled() {
         return cancelled;

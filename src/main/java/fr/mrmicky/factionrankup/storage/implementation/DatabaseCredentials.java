@@ -1,8 +1,10 @@
 package fr.mrmicky.factionrankup.storage.implementation;
 
-
 import org.bukkit.configuration.ConfigurationSection;
 
+/**
+ * @author MrMicky
+ */
 public class DatabaseCredentials {
 
     private String address;

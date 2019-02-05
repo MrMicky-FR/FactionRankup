@@ -10,23 +10,23 @@ import java.net.URLConnection;
 
 public class Checker {
 
-    private FactionRankup m;
+    private FactionRankup plugin;
     private boolean valid = true;
     private String username = "";
 
-    public Checker(FactionRankup m) {
-        this.m = m;
+    public Checker(FactionRankup plugin) {
+        this.plugin = plugin;
         checkPluginYml();
         checkValid();
         loadUsername();
 
         if (valid) {
-            Bukkit.getScheduler().runTaskAsynchronously(m, this::checkUpdate);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, this::checkUpdate);
         }
     }
 
     private void checkValid() {
-        String link = String.format("https://mrmicky.fr/verify.php?plugin=%s&uid=%s&nonce=%s&version=%s&fac=%s", m.getName(), FactionRankup.USER_ID, FactionRankup.NONCE_ID, m.getDescription().getVersion(), m.getFactionType());
+        String link = String.format("https://mrmicky.fr/verify.php?plugin=%s&uid=%s&nonce=%s&version=%s&faction=%s", plugin.getName(), FactionRankup.USER_ID, FactionRankup.NONCE_ID, plugin.getDescription().getVersion(), plugin.getFactionType());
 
         try {
             URL url = new URL(link);
@@ -35,19 +35,19 @@ public class Checker {
             StringBuilder str = new StringBuilder();
 
             while ((inputLine = br.readLine()) != null) {
-                str.append(inputLine).append("$");
+                str.append(inputLine).append('$');
             }
 
             if (str.toString().contains(FactionRankup.USER_ID) || str.toString().contains("refused")) {
                 valid = false;
-                m.getLogger().severe(" ");
-                m.getLogger().severe("*** THIS PLUGIN ID IS BLACKLISTED ! Please contact MrMicky on SpigotMC ! ***");
+                plugin.getLogger().severe(" ");
+                plugin.getLogger().severe("*** THIS PLUGIN ID IS BLACKLISTED ! Please contact MrMicky on SpigotMC ! ***");
                 if (str.toString().contains("id=") && str.toString().contains("$")) {
-                    m.getLogger().severe("***  REASON: " + str.toString().split("\\$")[1] + " ***");
+                    plugin.getLogger().severe("***  REASON: " + str.toString().split("\\$")[1] + " ***");
                 }
-                m.getLogger().severe("*** THE PLUGIN WILL DISABLE NOW ***");
-                m.getLogger().severe(" ");
-                Bukkit.getPluginManager().disablePlugin(m);
+                plugin.getLogger().severe("*** THE PLUGIN WILL DISABLE NOW ***");
+                plugin.getLogger().severe(" ");
+                Bukkit.getPluginManager().disablePlugin(plugin);
             }
         } catch (Exception e) {
             // ignore
@@ -55,14 +55,14 @@ public class Checker {
     }
 
     private void checkPluginYml() {
-        if (!m.getDescription().getName().equals("FactionRankup")
-                || !m.getDescription().getAuthors().toString().equals("[MrMicky, Vouchs]")) {
+        if (!plugin.getDescription().getName().equals("FactionRankup")
+                || !plugin.getDescription().getAuthors().toString().equals("[MrMicky, Vouchs]")) {
             valid = false;
-            m.getLogger().severe(" ");
-            m.getLogger().severe("THE PLUGIN.YML HAS BEEN EDITED (NAME OR AUTHOR) ! PLEASE DOWNLOAD THE PLUGIN FROM SPIGOTMC AGAIN !");
-            m.getLogger().severe("***THE PLUGIN WILL DISABLE***");
-            m.getLogger().severe(" ");
-            Bukkit.getPluginManager().disablePlugin(m);
+            plugin.getLogger().severe(" ");
+            plugin.getLogger().severe("THE PLUGIN.YML HAS BEEN EDITED (NAME OR AUTHOR) ! PLEASE DOWNLOAD THE PLUGIN FROM SPIGOTMC AGAIN !");
+            plugin.getLogger().severe("***THE PLUGIN WILL DISABLE***");
+            plugin.getLogger().severe(" ");
+            Bukkit.getPluginManager().disablePlugin(plugin);
         }
     }
 
@@ -90,9 +90,9 @@ public class Checker {
             URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=43316");
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 String lastVersion = reader.readLine();
-                if (!m.getDescription().getVersion().equalsIgnoreCase(lastVersion)) {
-                    m.getLogger().warning("A new version is available ! Last version is " + lastVersion + " and you are on " + m.getDescription().getVersion());
-                    m.getLogger().warning("You can download it on: " + m.getDescription().getWebsite());
+                if (!plugin.getDescription().getVersion().equalsIgnoreCase(lastVersion)) {
+                    plugin.getLogger().warning("A new version is available ! Last version is " + lastVersion + " and you are on " + plugin.getDescription().getVersion());
+                    plugin.getLogger().warning("You can download it on: " + plugin.getDescription().getWebsite());
                 }
             }
         } catch (Exception e) {

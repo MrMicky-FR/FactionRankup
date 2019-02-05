@@ -10,7 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class MigrationV2toV3 {
+/**
+ * @author MrMicky
+ */
+public class Migration {
 
     public static void migrateV2toV3(Plugin plugin) {
         File invFile = new File(plugin.getDataFolder(), "Inventory.yml");

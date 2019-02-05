@@ -50,7 +50,7 @@ public class FactionRankup extends JavaPlugin {
 
         FastInv.init(this);
 
-        MigrationV2toV3.migrateV2toV3(this);
+        Migration.migrateV2toV3(this);
 
         saveDefaultConfig();
         levels = new ConfigWrapper(this, "levels.yml");
@@ -116,7 +116,7 @@ public class FactionRankup extends JavaPlugin {
                 break;
         }
 
-        MigrationV2toV3.migrateV3_1toV3_2(this);
+        Migration.migrateV3_1toV3_2(this);
 
         new AbilitiesTask(this);
 
