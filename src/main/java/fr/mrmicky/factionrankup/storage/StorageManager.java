@@ -1,10 +1,7 @@
 package fr.mrmicky.factionrankup.storage;
 
 import fr.mrmicky.factionrankup.FactionRankup;
-import fr.mrmicky.factionrankup.storage.implementation.DatabaseCredentials;
-import fr.mrmicky.factionrankup.storage.implementation.SqlProvider;
 import fr.mrmicky.factionrankup.storage.implementation.YamlProvider;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +15,7 @@ public class StorageManager {
     private StorageProvider provider;
 
     public StorageManager(FactionRankup plugin) {
-        ConfigurationSection sqlSection = plugin.getConfig().getConfigurationSection("sql");
+        /*ConfigurationSection sqlSection = plugin.getConfig().getConfigurationSection("sql");
 
         if (sqlSection.getBoolean("enabled")) {
             DatabaseCredentials credentials = DatabaseCredentials.fromConfig(sqlSection);
@@ -26,7 +23,8 @@ public class StorageManager {
             provider = new SqlProvider(plugin, this, credentials);
         } else {
             provider = new YamlProvider(plugin, this);
-        }
+        }*/
+        provider = new YamlProvider(plugin, this);
 
         try {
             provider.init();
