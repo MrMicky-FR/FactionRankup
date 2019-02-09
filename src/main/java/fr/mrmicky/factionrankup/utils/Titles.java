@@ -51,7 +51,7 @@ public class Titles {
         }
 
         if (supportSpigotActionBar) {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text));
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
         } else {
             TitlesNMS.sendActionbar(p, text);
         }
