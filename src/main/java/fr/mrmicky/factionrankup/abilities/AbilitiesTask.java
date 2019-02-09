@@ -1,13 +1,8 @@
 package fr.mrmicky.factionrankup.abilities;
 
 import fr.mrmicky.factionrankup.FactionRankup;
-import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AbilitiesTask extends BukkitRunnable {
@@ -16,24 +11,24 @@ public class AbilitiesTask extends BukkitRunnable {
 
     public AbilitiesTask(FactionRankup main) {
         this.main = main;
-        runTaskTimer(main, 20, 60);
+
+        runTaskTimer(main, 5, 20);
     }
 
     @Override
     public void run() {
-        for (World w : Bukkit.getWorlds()) {
-            for (Player p : w.getPlayers()) {
-                if (Compatibility.get().hasFaction(p)) {
-                    int level = main.getFactionLevel(p);
-                    for (int i = level; i > 1; i--) {
-                        ConfigurationSection conf = main.getLevelsConfig().getConfigurationSection("levels." + i + ".ability");
-                        if (conf != null && conf.getString("type").equalsIgnoreCase("effect")) {
-                            PotionEffectType effect = PotionEffectType.getByName(conf.getString("effect").toUpperCase());
-                            p.addPotionEffect(new PotionEffect(effect, 50000, conf.getInt("level") - 1), true);
-                        }
-                    }
-                }
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            int level = main.getFactionLevel(p);
+
+            if (level <= 0) {
+                continue;
             }
+
+            main.getLevelManager().getAbilitiesForLevel(level)
+                    .filter(ability -> ability.getClass() == PotionAbility.class)
+                    .map(PotionAbility.class::cast)
+                    .filter(a -> a.getEffectType() != null)
+                    .forEach(ability -> p.addPotionEffect(ability.getPotionEffect(), true));
         }
     }
 }

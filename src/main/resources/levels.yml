@@ -11,7 +11,6 @@ levels:
       - '&7You will have 10% of chances to have'
       - '&7silktouch on your tool when mining'
     ability:
-      type: "custom" # Set to custom or to effect
       name: "SilkTouch" # Name of the ability. Can be Fly, MoreDrops, ReduceFalls, SilkTouch, DoubleXP
       chances: 10 # % of chances to have the effect
   2:
@@ -26,7 +25,6 @@ levels:
       - '&72x the inventory of a player when killing'
       - '&7a player'
     ability:
-      type: "custom"
       name: "MoreDrops"
       chances: 25
   3:
@@ -39,7 +37,7 @@ levels:
       description:
       - '&7You will have Night Vision effect'
     ability:
-      type: "effect"
+      name: "PotionEffect"
       effect: "NIGHT_VISION"
       level: 1
   4:
@@ -52,7 +50,7 @@ levels:
       description:
       - '&7You will have Speed effect'
     ability:
-      type: "effect"
+      name: "PotionEffect"
       effect: "SPEED"
       level: 1
   5:
@@ -65,7 +63,7 @@ levels:
       description:
       - '&7You will have haste effect'
     ability:
-      type: "effect"
+      name: "PotionEffect"
       effect: "FAST_DIGGING"
       level: 2
   6:
@@ -78,7 +76,7 @@ levels:
       description:
       - '&7You will have jump boost II effect'
     ability:
-      type: "effect"
+      name: "PotionEffect"
       effect: "JUMP"
       level: 2
   7:
@@ -91,7 +89,7 @@ levels:
       description:
       - '&7You will have Strenght effect'
     ability:
-      type: "effect"
+      name: "PotionEffect"
       effect: "INCREASE_DAMAGE"
       level: 1
   8:
@@ -105,7 +103,6 @@ levels:
       - '&7You will have 25% of chances to cancel'
       - '&7fall damages when falling'
     ability:
-      type: "custom"
       name: "ReduceFalls"
       chances: 25
   9:
@@ -119,7 +116,6 @@ levels:
       - '&7You will have 20% of chances to get'
       - '&7double XP'
     ability:
-      type: "custom"
       name: "DoubleXP"
       chances: 20
   10:
@@ -133,5 +129,4 @@ levels:
       - '&7You will have fly'
       - '&7when you are in your faction'
     ability:
-      type: "custom"
       name: "Fly"

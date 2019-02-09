@@ -1,6 +1,7 @@
 package fr.mrmicky.factionrankup;
 
 import fr.mrmicky.factionrankup.abilities.AbilitiesTask;
+import fr.mrmicky.factionrankup.abilities.LevelManager;
 import fr.mrmicky.factionrankup.commands.CommandFactionrankup;
 import fr.mrmicky.factionrankup.commands.CommandRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
@@ -31,6 +32,7 @@ public class FactionRankup extends JavaPlugin {
 
     private FactionType factionType = FactionType.FACTIONS;
     private StorageManager storageManager;
+    private LevelManager levelManager;
 
     private ConfigWrapper levels;
     private ConfigWrapper messages;
@@ -55,6 +57,9 @@ public class FactionRankup extends JavaPlugin {
         saveDefaultConfig();
         levels = new ConfigWrapper(this, "levels.yml");
         messages = new ConfigWrapper(this, "messages.yml");
+
+        levelManager = new LevelManager(this);
+        levelManager.loadLevels();
 
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
@@ -138,6 +143,10 @@ public class FactionRankup extends JavaPlugin {
 
     public FileConfiguration getLevelsConfig() {
         return levels.getConfig();
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
     }
 
     public void reloadAllConfigs() {

@@ -1,10 +1,13 @@
 package fr.mrmicky.factionrankup.inventory;
 
 import fr.mrmicky.factionrankup.FactionRankup;
+import fr.mrmicky.factionrankup.abilities.CommandAbility;
+import fr.mrmicky.factionrankup.abilities.Level;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.event.FactionRankupEvent;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
+import fr.mrmicky.factionrankup.utils.FastReflection;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,11 +26,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.UnaryOperator;
 
+/**
+ * @author MrMicky
+ */
 public class RankupInventory extends FastInv {
+
+    private static final Random RANDOM = new Random();
 
     private FactionRankup main;
     private IFaction faction;
-    private static final Random RANDOM = new Random();
 
     public RankupInventory(FactionRankup main, Player p) {
         super(54, ChatUtils.color(main.getConfig().getString("rankup-inventory.name")));
@@ -38,77 +45,69 @@ public class RankupInventory extends FastInv {
     }
 
     private void init() {
-        int level = main.getFactionLevel(faction);
-        int nextLevelCost = getNextRankPrice(level);
+        Level level = main.getLevelManager().getLevel(main.getFactionLevel(faction));
+        boolean maxLevel = level.getLevel() >= main.getLevelManager().getLevelCount() - 1;
+        Level nextLevel = maxLevel ? null : main.getLevelManager().getLevel(level.getLevel() + 1);
 
         ConfigurationSection conf = main.getConfig().getConfigurationSection("rankup-inventory");
-        ConfigurationSection item = conf.getConfigurationSection(nextLevelCost > 0 ? "rankup-item" : "rankup-item-max-level");
+        ConfigurationSection item = conf.getConfigurationSection(maxLevel ? "rankup-item-max-level" : "rankup-item");
 
-        UnaryOperator<String> replace = s -> {
-            s = s.replace("%faction_name%", faction.getName());
-            s = s.replace("%faction_level%", String.valueOf(level));
-            s = s.replace("%next_level_cost%", String.valueOf(nextLevelCost));
-            return s.replace("%money%", String.valueOf(faction.getMoney()));
-        };
+        UnaryOperator<String> replace = s -> s.replace("%faction_name%", faction.getName())
+                .replace("%faction_level%", Integer.toString(level.getLevel()))
+                .replace("%next_level_cost%", Double.toString(nextLevel == null ? 0 : nextLevel.getCost()))
+                .replace("%money%", Double.toString(faction.getMoney()));
 
-        addItem(13, getItem(item.getString("type"), item.getInt("data"), item.getString("name"),
-                item.getStringList("lore"), false, replace), e -> rankup(e.getPlayer()));
+        addItem(13, getItem(Material.matchMaterial(item.getString("type")), item.getInt("data"), item.getString("name"),
+                item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup(e.getPlayer()));
 
-        ConfigurationSection levels = main.getLevelsConfig().getConfigurationSection("levels");
-        for (int i = 1; i < 100; i++) {
-            String levelString = String.valueOf(i);
-            ConfigurationSection levelItem = levels.getConfigurationSection(String.valueOf(i));
-            if (levelItem != null) {
-                boolean unlocked = level >= i;
+        for (Level lvl : main.getLevelManager().getLevels()) {
+            boolean unlocked = level.getLevel() >= lvl.getLevel();
 
-                UnaryOperator<String> replaceItem = s -> {
-                    s = s.replace("%ability%", levelItem.getString("name"));
-                    s = s.replace("%state%", main.getMessage(unlocked ? "unlocked" : "locked"));
-                    s = s.replace("%max_members%", String.valueOf(levelItem.getInt("max-members")));
-                    s = s.replace("%ability%", levelItem.getString("name"));
-                    s = s.replace("%level%", levelString);
-                    return s.replace("%money%", String.valueOf(faction.getMoney()));
-                };
+            UnaryOperator<String> replaceItem = s -> s.replace("%ability%", lvl.getName())
+                    .replace("%state%", main.getMessage(unlocked ? "unlocked" : "locked"))
+                    .replace("%max_members%", Integer.toString(lvl.getMaxMembers()))
+                    .replace("%level%", Integer.toString(lvl.getLevel()))
+                    .replace("%money%", Double.toString(faction.getMoney()));
 
-                List<String> lore = new ArrayList<>(conf.getStringList("levels-item.lore"));
-                List<String> abilityInfos = levelItem.getStringList("item.description");
+            List<String> lore = new ArrayList<>(conf.getStringList("levels-item.lore"));
+            List<String> abilityInfos = new ArrayList<>(lvl.getDescription());
 
-                int j = 0;
-                for (String s : lore) {
-                    if (s.contains("%ability_info%")) {
-                        if (!abilityInfos.isEmpty()) {
-                            abilityInfos.set(0, s.replace("%ability_info%", abilityInfos.get(0)));
-                            lore.remove(j);
-                            lore.addAll(j, abilityInfos);
-                        } else {
-                            lore.remove(j);
-                        }
-                        break;
+            int j = 0;
+            for (String s : lore) {
+                if (s.contains("%ability_info%")) {
+                    if (!abilityInfos.isEmpty()) {
+                        abilityInfos.set(0, s.replace("%ability_info%", abilityInfos.get(0)));
+                        lore.remove(j);
+                        lore.addAll(j, abilityInfos);
+                    } else {
+                        lore.remove(j);
                     }
-                    j++;
+                    break;
                 }
-
-                addItem(i + 26, getItem(levelItem.getString("item.type"), levelItem.getInt("item.data"),
-                        conf.getString("levels-item.name"), lore, unlocked, replaceItem));
+                j++;
             }
+
+            addItem(lvl.getLevel() + 26, getItem(lvl.getType(), lvl.getData(), conf.getString("levels-item.name"), lore, unlocked, replaceItem));
         }
     }
 
     private void rankup(Player p) {
         p.closeInventory();
-        int level = main.getFactionLevel(faction);
-        int price = getNextRankPrice(level);
+        int lvl = main.getFactionLevel(faction);
+        int nextLvl = lvl + 1;
 
-        if (price == -1) {
+        if (lvl >= main.getLevelManager().getLevelCount()) {
             p.sendMessage(main.getMessage("max-level"));
             p.closeInventory();
             return;
         }
 
-        if (faction.hasMoney(price)) {
+        Level nextLevel = main.getLevelManager().getLevel(nextLvl);
+
+        if (faction.hasMoney(nextLevel.getCost())) {
             p.closeInventory();
 
-            FactionRankupEvent event = new FactionRankupEvent(faction, level, level + 1);
+            FactionRankupEvent event = new FactionRankupEvent(faction, lvl, lvl + 1);
 
             Bukkit.getPluginManager().callEvent(event);
 
@@ -116,27 +115,11 @@ public class RankupInventory extends FastInv {
                 return;
             }
 
-            main.setFactionLevel(faction, event.getNewLevel());
-            faction.removeMoney(price);
+            main.setFactionLevel(faction, nextLvl);
+            faction.removeMoney(nextLevel.getCost());
 
             if (main.getConfig().getBoolean("rankup-fireworks")) {
-                new BukkitRunnable() {
-
-                    int i = 8;
-
-                    @Override
-                    public void run() {
-                        Firework f = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
-                        FireworkMeta fm = f.getFireworkMeta();
-                        fm.addEffects(FireworkEffect.builder().withColor(getRandomColor()).withFade(getRandomColor()).trail(true).build());
-                        fm.setPower(RANDOM.nextInt(3));
-                        f.setFireworkMeta(fm);
-
-                        if (i-- < 0) {
-                            cancel();
-                        }
-                    }
-                }.runTaskTimer(main, 10, 10);
+                startFireworks(p);
             }
 
             String title = main.getMessage("rankup.title");
@@ -145,22 +128,26 @@ public class RankupInventory extends FastInv {
 
             String message = main.getMessage("rankup.chat");
             if (!message.isEmpty()) {
-                String messageReplaced = replacePlaceholder(p, main.getMessage("rankup.chat"), faction.getName(), level);
+                String messageReplaced = replacePlaceholder(p, main.getMessage("rankup.chat"), faction.getName(), lvl);
                 faction.getPlayers().forEach(ps -> ps.sendMessage(messageReplaced));
             }
 
             String bc = main.getMessage("rankup.broadcast");
             if (!bc.isEmpty()) {
-                Bukkit.broadcastMessage(replacePlaceholder(p, bc, faction.getName(), level));
+                Bukkit.broadcastMessage(replacePlaceholder(p, bc, faction.getName(), lvl));
             }
+
+            main.getLevelManager().getLevel(lvl + 1).getAbilities().stream()
+                    .filter(ability -> ability.getClass() == CommandAbility.class)
+                    .map(CommandAbility.class::cast)
+                    .forEach(ability -> ability.dispatchCommand(faction, lvl + 1));
         } else {
             p.sendMessage(main.getMessage("no-money"));
             p.closeInventory();
         }
     }
 
-    private ItemStack getItem(String mat, int data, String name, List<String> lore, boolean glow, UnaryOperator<String> replaces) {
-        Material type = Material.matchMaterial(mat);
+    private ItemStack getItem(Material type, int data, String name, List<String> lore, boolean glow, UnaryOperator<String> replaces) {
         ItemStack item = new ItemStack(type == null ? Material.STONE : type, 1, (byte) data);
         ItemMeta meta = item.getItemMeta();
 
@@ -168,9 +155,8 @@ public class RankupInventory extends FastInv {
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
         }
 
-        try {
+        if (FastReflection.optionalClass("org.bukkit.inventory.ItemFlag").isPresent()) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-        } catch (Exception ignore) {
         }
 
         if (replaces != null) {
@@ -186,21 +172,34 @@ public class RankupInventory extends FastInv {
         return item;
     }
 
-    private int getNextRankPrice(int level) {
-        ConfigurationSection section = main.getLevelsConfig().getConfigurationSection("levels." + (level + 1));
-
-        return section != null ? section.getInt("cost") : -1;
-    }
-
     private Color getRandomColor() {
         return Color.fromRGB(RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
     }
 
     private String replacePlaceholder(Player player, String msg, String faction, int level) {
-        msg = msg.replace("%new_level%", String.valueOf(level + 1));
-        msg = msg.replace("%old_level%", String.valueOf(level));
-        msg = msg.replace("%faction%", faction);
-        msg = msg.replace("%player%", player.getName());
-        return msg;
+        return msg.replace("%new_level%", Integer.toString(level + 1))
+                .replace("%old_level%", Integer.toString(level))
+                .replace("%faction%", faction)
+                .replace("%player%", player.getName());
+    }
+
+    private void startFireworks(Player p) {
+        new BukkitRunnable() {
+
+            int i = 8;
+
+            @Override
+            public void run() {
+                Firework f = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
+                FireworkMeta fm = f.getFireworkMeta();
+                fm.addEffects(FireworkEffect.builder().withColor(getRandomColor()).withFade(getRandomColor()).trail(true).build());
+                fm.setPower(RANDOM.nextInt(3));
+                f.setFireworkMeta(fm);
+
+                if (i-- < 0) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(main, 10, 10);
     }
 }

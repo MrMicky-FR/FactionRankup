@@ -2,6 +2,7 @@ package fr.mrmicky.factionrankup.listeners;
 
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.abilities.Ability;
+import fr.mrmicky.factionrankup.abilities.ChanceAbility;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.Bukkit;
@@ -22,15 +23,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AbilitiesListener implements Listener {
 
-    private FactionRankup main;
+    private FactionRankup plugin;
     private List<UUID> flying = new ArrayList<>();
 
-    public AbilitiesListener(FactionRankup main) {
-        this.main = main;
+    public AbilitiesListener(FactionRankup plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -42,7 +44,7 @@ public class AbilitiesListener implements Listener {
         Player p = (Player) e.getEntity();
         Player killer = e.getEntity().getKiller();
 
-        if (Ability.MORE_DROPS.isActive(killer)) {
+        if (isChanceAbilityActive(p, "MoreDrops")) {
             sendActionbar(killer, "moredrops");
             e.getDrops().forEach(item -> p.getWorld().dropItemNaturally(p.getLocation(), item));
         }
@@ -52,7 +54,7 @@ public class AbilitiesListener implements Listener {
     public void onExp(PlayerExpChangeEvent e) {
         Player p = e.getPlayer();
 
-        if (Ability.DOUBLE_XP.isActive(p)) {
+        if (isChanceAbilityActive(p, "DoubleXP")) {
             sendActionbar(p, "double-xp");
             e.setAmount(e.getAmount() * 2);
         }
@@ -65,7 +67,7 @@ public class AbilitiesListener implements Listener {
         }
 
         Player p = (Player) e.getEntity();
-        if (Ability.REDUCE_FALL.isActive(p)) {
+        if (isChanceAbilityActive(p, "ReduceFalls")) {
             sendActionbar(p, "reducefall");
             e.setCancelled(true);
         }
@@ -82,12 +84,12 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
-        if (Ability.SILKTOUCH.isActive(p)) {
+        if (isChanceAbilityActive(p, "SilkTouch")) {
             sendActionbar(p, "silktouch");
 
             item.addEnchantment(Enchantment.SILK_TOUCH, 1);
             // noinspection deprecation
-            Bukkit.getScheduler().runTask(main, () -> p.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
+            Bukkit.getScheduler().runTask(plugin, () -> p.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
         }
     }
 
@@ -101,7 +103,7 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
-        if (Ability.FLY.isActive(p)) {
+        if (isAbilityActive(p, "Fly")) {
             if (Compatibility.get().isInOwnTerritory(p)) {
                 if (!p.getAllowFlight()) {
                     if (!flying.contains(p.getUniqueId())) {
@@ -122,7 +124,24 @@ public class AbilitiesListener implements Listener {
 
     private void sendActionbar(Player p, String s) {
         if (!s.isEmpty()) {
-            Titles.sendActionBar(p, main.getMessage(s));
+            Titles.sendActionBar(p, plugin.getMessage(s));
         }
+    }
+
+    private boolean isAbilityActive(Player p, String name) {
+        int level = plugin.getFactionLevel(p);
+
+        return plugin.getLevelManager().getAbilitiesForLevel(level, name).findAny().isPresent();
+    }
+
+    private boolean isChanceAbilityActive(Player p, String name) {
+        int level = plugin.getFactionLevel(p);
+
+        Optional<Ability> ability = plugin.getLevelManager().getAbilitiesForLevel(level, name)
+                .filter(a -> a.getClass() == ChanceAbility.class)
+                .findFirst();
+
+        return ability.filter(ability1 -> ((ChanceAbility) ability1).isActive()).isPresent();
+
     }
 }
