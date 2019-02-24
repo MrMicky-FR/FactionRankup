@@ -6,7 +6,7 @@
 
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup</artifactId>
-    <version>3.2.0-BETA</version>
+    <version>3.2.1-BETA</version>
     <packaging>jar</packaging>
 
     <name>FactionRankup</name>
