@@ -90,7 +90,8 @@
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
             <version>1.6.9.5-U0.2.2</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/Factions-1.6.9.5-U0.2.1-RC2.jar</systemPath>
         </dependency>
         <!-- Factions -->
         <dependency>
