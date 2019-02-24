@@ -45,15 +45,15 @@ public class RankupInventory extends FastInv {
     }
 
     private void init() {
-        Level level = main.getLevelManager().getLevel(main.getFactionLevel(faction));
-        boolean maxLevel = level.getLevel() >= main.getLevelManager().getLevelCount() - 1;
-        Level nextLevel = maxLevel ? null : main.getLevelManager().getLevel(level.getLevel() + 1);
+        int level = main.getFactionLevel(faction);
+        boolean maxLevel = level >= main.getLevelManager().getLevelCount() - 1;
+        Level nextLevel = maxLevel ? null : main.getLevelManager().getLevel(level + 1);
 
         ConfigurationSection conf = main.getConfig().getConfigurationSection("rankup-inventory");
         ConfigurationSection item = conf.getConfigurationSection(maxLevel ? "rankup-item-max-level" : "rankup-item");
 
         UnaryOperator<String> replace = s -> s.replace("%faction_name%", faction.getName())
-                .replace("%faction_level%", Integer.toString(level.getLevel()))
+                .replace("%faction_level%", Integer.toString(level))
                 .replace("%next_level_cost%", Double.toString(nextLevel == null ? 0 : nextLevel.getCost()))
                 .replace("%money%", Double.toString(faction.getMoney()));
 
@@ -61,7 +61,7 @@ public class RankupInventory extends FastInv {
                 item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup(e.getPlayer()));
 
         for (Level lvl : main.getLevelManager().getLevels()) {
-            boolean unlocked = level.getLevel() >= lvl.getLevel();
+            boolean unlocked = level >= lvl.getLevel();
 
             UnaryOperator<String> replaceItem = s -> s.replace("%ability%", lvl.getName())
                     .replace("%state%", main.getMessage(unlocked ? "unlocked" : "locked"))
