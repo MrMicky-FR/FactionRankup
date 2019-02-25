@@ -4,6 +4,7 @@ import fr.mrmicky.factionrankup.FactionRankup;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -16,7 +17,6 @@ public class Checker {
 
     public Checker(FactionRankup plugin) {
         this.plugin = plugin;
-        checkPluginYml();
         checkValid();
         loadUsername();
 
@@ -30,39 +30,28 @@ public class Checker {
 
         try {
             URL url = new URL(link);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
-            String inputLine;
-            StringBuilder str = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                StringBuilder builder = new StringBuilder();
+                String inputLine;
 
-            while ((inputLine = br.readLine()) != null) {
-                str.append(inputLine).append('$');
-            }
-
-            if (str.toString().contains(FactionRankup.USER_ID) || str.toString().contains("refused")) {
-                valid = false;
-                plugin.getLogger().severe(" ");
-                plugin.getLogger().severe("*** THIS PLUGIN ID IS BLACKLISTED ! Please contact MrMicky on SpigotMC ! ***");
-                if (str.toString().contains("id=") && str.toString().contains("$")) {
-                    plugin.getLogger().severe("***  REASON: " + str.toString().split("\\$")[1] + " ***");
+                while ((inputLine = reader.readLine()) != null) {
+                    builder.append(inputLine).append('$');
                 }
-                plugin.getLogger().severe("*** THE PLUGIN WILL DISABLE NOW ***");
-                plugin.getLogger().severe(" ");
-                Bukkit.getPluginManager().disablePlugin(plugin);
-            }
-        } catch (Exception e) {
-            // ignore
-        }
-    }
 
-    private void checkPluginYml() {
-        if (!plugin.getDescription().getName().equals("FactionRankup")
-                || !plugin.getDescription().getAuthors().toString().equals("[MrMicky, Vouchs]")) {
-            valid = false;
-            plugin.getLogger().severe(" ");
-            plugin.getLogger().severe("THE PLUGIN.YML HAS BEEN EDITED (NAME OR AUTHOR) ! PLEASE DOWNLOAD THE PLUGIN FROM SPIGOTMC AGAIN !");
-            plugin.getLogger().severe("***THE PLUGIN WILL DISABLE***");
-            plugin.getLogger().severe(" ");
-            Bukkit.getPluginManager().disablePlugin(plugin);
+                if (builder.toString().contains(FactionRankup.USER_ID) || builder.toString().contains("refused")) {
+                    valid = false;
+                    plugin.getLogger().severe(" ");
+                    plugin.getLogger().severe("*** THIS PLUGIN ID IS BLACKLISTED ! Please contact MrMicky on SpigotMC ! ***");
+                    if (builder.toString().contains("id=") && builder.toString().contains("$")) {
+                        plugin.getLogger().severe("***  REASON: " + builder.toString().split("\\$")[1] + " ***");
+                    }
+                    plugin.getLogger().severe("*** THE PLUGIN WILL DISABLE NOW ***");
+                    plugin.getLogger().severe(" ");
+                    Bukkit.getPluginManager().disablePlugin(plugin);
+                }
+            }
+        } catch (IOException e) {
+            // ignore
         }
     }
 
@@ -71,15 +60,17 @@ public class Checker {
             URL url = new URL("https://www.spigotmc.org/members/" + FactionRankup.USER_ID);
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String inputLine;
 
-            while ((inputLine = br.readLine()) != null) {
-                sb.append(inputLine);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder builder = new StringBuilder();
+                String inputLine;
+
+                while ((inputLine = reader.readLine()) != null) {
+                    builder.append(inputLine);
+                }
+
+                username = builder.toString().split("<title>")[1].split("</title>")[0].split(" | ")[0] + " ";
             }
-
-            username = sb.toString().split("<title>")[1].split("</title>")[0].split(" | ")[0] + " ";
         } catch (Exception e) {
             // ignore
         }
@@ -95,7 +86,7 @@ public class Checker {
                     plugin.getLogger().warning("You can download it on: " + plugin.getDescription().getWebsite());
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             // Don't display an error
         }
     }
