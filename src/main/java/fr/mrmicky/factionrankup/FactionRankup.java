@@ -163,7 +163,7 @@ public class FactionRankup extends JavaPlugin {
      * Level management
      */
     public void setFactionLevel(Player p, int level) {
-        Objects.requireNonNull(p);
+        Objects.requireNonNull(p, "player");
         setFactionLevel(Compatibility.get().getFactionByPlayer(p), level);
     }
 
@@ -182,7 +182,7 @@ public class FactionRankup extends JavaPlugin {
     }
 
     public int getFactionLevel(Player p) {
-        Objects.requireNonNull(p);
+        Objects.requireNonNull(p, "player");
         return getFactionLevel(Compatibility.get().getFactionByPlayer(p));
     }
 

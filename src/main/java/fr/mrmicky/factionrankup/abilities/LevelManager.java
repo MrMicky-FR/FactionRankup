@@ -27,6 +27,7 @@ public class LevelManager {
         registerAbility("ReduceFalls", ChanceAbility::new);
         registerAbility("SilkTouch", ChanceAbility::new);
         registerAbility("DoubleXP", ChanceAbility::new);
+        registerAbility("InstantCrops", ChanceAbility::new);
     }
 
     public void loadLevels() {

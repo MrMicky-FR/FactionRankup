@@ -14,6 +14,7 @@ moredrops: "%prefix% You got player's inventory x2"
 reducefall: "%prefix% Your fall damages was cancelled"
 fly-enabled: "%prefix% Fly &aenabled&3, you are in your faction"
 fly-disabled: "%prefix% Fly &cdisabled&3, you are not in your faction"
+instantcrops: "%prefix% Your plant grew up !"
 
 # Message display in /f help
 f-rankup-help: "Rankup your faction"
