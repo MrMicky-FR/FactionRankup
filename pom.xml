@@ -38,6 +38,10 @@
                             <pattern>com.factionsone.factions</pattern>
                             <shadedPattern>com.massivecraft.factions</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>fr.mrmicky.fastinv</pattern>
+                            <shadedPattern>fr.mrmicky.factionrankup.fastinv</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -64,6 +68,10 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>factions-repo</id>
             <url>http://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
@@ -84,6 +92,13 @@
             <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- FastInv -->
+        <dependency>
+            <groupId>fr.mrmicky</groupId>
+            <artifactId>FastInv</artifactId>
+            <version>v3.0</version>
+            <scope>compile</scope>
         </dependency>
         <!-- FactionsUUID -->
         <dependency>

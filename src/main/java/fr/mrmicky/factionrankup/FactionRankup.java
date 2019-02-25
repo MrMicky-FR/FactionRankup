@@ -11,11 +11,11 @@ import fr.mrmicky.factionrankup.compatibility.implementations.factions.MFactions
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsone.FactionsOneManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.FactionsUUIDManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
-import fr.mrmicky.factionrankup.inventory.FastInv;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.storage.StorageManager;
 import fr.mrmicky.factionrankup.utils.*;
+import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +50,7 @@ public class FactionRankup extends JavaPlugin {
 
         instance = this;
 
-        FastInv.init(this);
+        FastInvManager.register(this);
 
         Migration.migrateV2toV3(this);
 

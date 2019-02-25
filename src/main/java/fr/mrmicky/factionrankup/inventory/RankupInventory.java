@@ -9,7 +9,12 @@ import fr.mrmicky.factionrankup.event.FactionRankupEvent;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
 import fr.mrmicky.factionrankup.utils.FastReflection;
 import fr.mrmicky.factionrankup.utils.Titles;
-import org.bukkit.*;
+import fr.mrmicky.fastinv.FastInv;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -57,8 +62,8 @@ public class RankupInventory extends FastInv {
                 .replace("%next_level_cost%", Double.toString(nextLevel == null ? 0 : nextLevel.getCost()))
                 .replace("%money%", Double.toString(faction.getMoney()));
 
-        addItem(13, getItem(Material.matchMaterial(item.getString("type")), item.getInt("data"), item.getString("name"),
-                item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup(e.getPlayer()));
+        setItem(13, getItem(Material.matchMaterial(item.getString("type")), item.getInt("data"), item.getString("name"),
+                item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup((Player) e.getWhoClicked()));
 
         for (Level lvl : main.getLevelManager().getLevels()) {
             boolean unlocked = level >= lvl.getLevel();
@@ -87,7 +92,7 @@ public class RankupInventory extends FastInv {
                 j++;
             }
 
-            addItem(lvl.getLevel() + 26, getItem(lvl.getType(), lvl.getData(), conf.getString("levels-item.name"), lore, unlocked, replaceItem));
+            setItem(lvl.getLevel() + 26, getItem(lvl.getType(), lvl.getData(), conf.getString("levels-item.name"), lore, unlocked, replaceItem));
         }
     }
 
