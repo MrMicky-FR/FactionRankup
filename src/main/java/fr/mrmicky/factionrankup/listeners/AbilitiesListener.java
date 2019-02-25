@@ -10,7 +10,6 @@ import org.bukkit.CropState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -82,18 +81,18 @@ public class AbilitiesListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
-        Block b = e.getBlockPlaced();
-        BlockState state = b.getState();
+        BlockState state = e.getBlockPlaced().getState();
 
         if (!(state.getData() instanceof Crops)) {
             return;
         }
 
         if (isChanceAbilityActive(p, "InstantCrops")) {
-            sendActionbar(p, "instantcrops");
             Crops crops = (Crops) state.getData();
             crops.setState(CropState.RIPE);
             state.update();
+
+            sendActionbar(p, "instantcrops");
         }
     }
 
