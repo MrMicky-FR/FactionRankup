@@ -134,7 +134,6 @@ public class FactionRankup extends JavaPlugin {
         getCommand("factionrankup").setExecutor(new CommandFactionrankup(this));
 
         getLogger().info("Thank you " + c.getUsername() + "for purchasing FactionRankup :)");
-        getLogger().info("The plugin has been successfully activated");
     }
 
     public FactionType getFactionType() {
