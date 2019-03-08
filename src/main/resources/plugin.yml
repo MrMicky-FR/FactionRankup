@@ -10,5 +10,4 @@ commands:
     description: Rankup your faction
     aliases: [rankup]
   factionrankup:
-    description: Display informations about FactionRankup
-    usage: /<command> <about|reload>
+    description: Display informations about the plugin and reload the config

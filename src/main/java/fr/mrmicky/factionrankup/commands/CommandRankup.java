@@ -34,7 +34,7 @@ public class CommandRankup implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Console cannot execute this command");
+            sender.sendMessage(ChatColor.RED + "Only players can use this command");
             return true;
         }
 
