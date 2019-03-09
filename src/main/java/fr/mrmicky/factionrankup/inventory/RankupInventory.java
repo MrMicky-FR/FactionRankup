@@ -38,23 +38,23 @@ public class RankupInventory extends FastInv {
 
     private static final Random RANDOM = new Random();
 
-    private FactionRankup main;
+    private FactionRankup plugin;
     private IFaction faction;
 
-    public RankupInventory(FactionRankup main, Player p) {
-        super(54, ChatUtils.color(main.getConfig().getString("rankup-inventory.name")));
-        this.main = main;
+    public RankupInventory(FactionRankup plugin, Player p) {
+        super(54, ChatUtils.color(plugin.getConfig().getString("rankup-inventory.name")));
+        this.plugin = plugin;
         this.faction = Compatibility.get().getFactionByPlayer(p);
 
         init();
     }
 
     private void init() {
-        int level = main.getFactionLevel(faction);
-        boolean maxLevel = level >= main.getLevelManager().getLevelCount() - 1;
-        Level nextLevel = maxLevel ? null : main.getLevelManager().getLevel(level + 1);
+        int level = plugin.getFactionLevel(faction);
+        boolean maxLevel = level >= plugin.getLevelManager().getLevelCount() - 1;
+        Level nextLevel = maxLevel ? null : plugin.getLevelManager().getLevel(level + 1);
 
-        ConfigurationSection conf = main.getConfig().getConfigurationSection("rankup-inventory");
+        ConfigurationSection conf = plugin.getConfig().getConfigurationSection("rankup-inventory");
         ConfigurationSection item = conf.getConfigurationSection(maxLevel ? "rankup-item-max-level" : "rankup-item");
 
         UnaryOperator<String> replace = s -> s.replace("%faction_name%", faction.getName())
@@ -65,11 +65,11 @@ public class RankupInventory extends FastInv {
         setItem(13, getItem(Material.matchMaterial(item.getString("type")), item.getInt("data"), item.getString("name"),
                 item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup((Player) e.getWhoClicked()));
 
-        for (Level lvl : main.getLevelManager().getLevels()) {
+        for (Level lvl : plugin.getLevelManager().getLevels()) {
             boolean unlocked = level >= lvl.getLevel();
 
             UnaryOperator<String> replaceItem = s -> s.replace("%ability%", lvl.getName())
-                    .replace("%state%", main.getMessage(unlocked ? "unlocked" : "locked"))
+                    .replace("%state%", plugin.getMessage(unlocked ? "unlocked" : "locked"))
                     .replace("%max_members%", Integer.toString(lvl.getMaxMembers()))
                     .replace("%level%", Integer.toString(lvl.getLevel()))
                     .replace("%money%", Double.toString(faction.getMoney()));
@@ -98,16 +98,16 @@ public class RankupInventory extends FastInv {
 
     private void rankup(Player p) {
         p.closeInventory();
-        int lvl = main.getFactionLevel(faction);
+        int lvl = plugin.getFactionLevel(faction);
         int nextLvl = lvl + 1;
 
-        if (lvl >= main.getLevelManager().getLevelCount()) {
-            p.sendMessage(main.getMessage("max-level"));
+        if (lvl >= plugin.getLevelManager().getLevelCount()) {
+            p.sendMessage(plugin.getMessage("max-level"));
             p.closeInventory();
             return;
         }
 
-        Level nextLevel = main.getLevelManager().getLevel(nextLvl);
+        Level nextLevel = plugin.getLevelManager().getLevel(nextLvl);
 
         if (faction.hasMoney(nextLevel.getCost())) {
             p.closeInventory();
@@ -120,34 +120,34 @@ public class RankupInventory extends FastInv {
                 return;
             }
 
-            main.setFactionLevel(faction, nextLvl);
+            plugin.setFactionLevel(faction, nextLvl);
             faction.removeMoney(nextLevel.getCost());
 
-            if (main.getConfig().getBoolean("rankup-fireworks")) {
+            if (plugin.getConfig().getBoolean("rankup-fireworks")) {
                 startFireworks(p);
             }
 
-            String title = main.getMessage("rankup.title");
-            String subtitle = main.getMessage("rankup.subtitle");
+            String title = plugin.getMessage("rankup.title");
+            String subtitle = plugin.getMessage("rankup.subtitle");
             Titles.sendTitle(p, title, subtitle, 5, 30, 5);
 
-            String message = main.getMessage("rankup.chat");
+            String message = plugin.getMessage("rankup.chat");
             if (!message.isEmpty()) {
-                String messageReplaced = replacePlaceholder(p, main.getMessage("rankup.chat"), faction.getName(), lvl);
+                String messageReplaced = replacePlaceholder(p, plugin.getMessage("rankup.chat"), faction.getName(), lvl);
                 faction.getPlayers().forEach(ps -> ps.sendMessage(messageReplaced));
             }
 
-            String bc = main.getMessage("rankup.broadcast");
+            String bc = plugin.getMessage("rankup.broadcast");
             if (!bc.isEmpty()) {
                 Bukkit.broadcastMessage(replacePlaceholder(p, bc, faction.getName(), lvl));
             }
 
-            main.getLevelManager().getLevel(lvl + 1).getAbilities().stream()
+            plugin.getLevelManager().getLevel(lvl + 1).getAbilities().stream()
                     .filter(ability -> ability.getClass() == CommandAbility.class)
                     .map(CommandAbility.class::cast)
                     .forEach(ability -> ability.dispatchCommand(faction, lvl + 1));
         } else {
-            p.sendMessage(main.getMessage("no-money"));
+            p.sendMessage(plugin.getMessage("no-money"));
             p.closeInventory();
         }
     }
@@ -205,6 +205,6 @@ public class RankupInventory extends FastInv {
                     cancel();
                 }
             }
-        }.runTaskTimer(main, 10, 10);
+        }.runTaskTimer(plugin, 10, 10);
     }
 }

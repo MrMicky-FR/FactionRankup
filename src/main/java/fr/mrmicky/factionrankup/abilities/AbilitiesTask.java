@@ -7,24 +7,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AbilitiesTask extends BukkitRunnable {
 
-    private FactionRankup main;
+    private FactionRankup plugin;
 
-    public AbilitiesTask(FactionRankup main) {
-        this.main = main;
+    public AbilitiesTask(FactionRankup plugin) {
+        this.plugin = plugin;
 
-        runTaskTimer(main, 5, 20);
+        runTaskTimer(plugin, 5, 20);
     }
 
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            int level = main.getFactionLevel(p);
+            int level = plugin.getFactionLevel(p);
 
             if (level <= 0) {
                 continue;
             }
 
-            main.getLevelManager().getAbilitiesForLevel(level)
+            plugin.getLevelManager().getAbilitiesForLevel(level)
                     .filter(ability -> ability.getClass() == PotionAbility.class)
                     .map(PotionAbility.class::cast)
                     .filter(a -> a.getEffectType() != null)

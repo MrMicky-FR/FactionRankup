@@ -21,7 +21,7 @@ public class CommandFactionrankup implements CommandExecutor, TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             sendUsage(sender);
             return true;
