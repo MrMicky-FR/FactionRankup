@@ -35,7 +35,11 @@ public class PotionAbility extends Ability {
         return level;
     }
 
-    public PotionEffect getPotionEffect() {
-        return new PotionEffect(effectType, 50000, level - 1);
+    public int getEffectLevel() {
+        return level - 1;
+    }
+
+    public PotionEffect createPotionEffect() {
+        return new PotionEffect(effectType, 50000, getEffectLevel());
     }
 }
