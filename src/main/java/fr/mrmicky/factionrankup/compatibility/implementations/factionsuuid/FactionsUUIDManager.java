@@ -63,6 +63,6 @@ public class FactionsUUIDManager implements IFactionManager {
     }
 
     private IFaction of(Faction faction) {
-        return new FactionsUUIDImpl(faction);
+        return faction != null ? new FactionsUUIDImpl(faction) : null;
     }
 }

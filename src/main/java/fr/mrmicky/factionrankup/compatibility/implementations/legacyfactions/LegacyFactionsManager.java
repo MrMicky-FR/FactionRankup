@@ -63,6 +63,6 @@ public class LegacyFactionsManager implements IFactionManager {
     }
 
     private IFaction of(Faction faction) {
-        return new LegacyFactionsImpl(faction);
+        return faction != null ? new LegacyFactionsImpl(faction) : null;
     }
 }

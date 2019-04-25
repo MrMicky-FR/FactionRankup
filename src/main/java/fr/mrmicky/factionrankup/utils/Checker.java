@@ -17,6 +17,7 @@ public class Checker {
 
     public Checker(FactionRankup plugin) {
         this.plugin = plugin;
+
         checkValid();
         loadUsername();
 
@@ -87,7 +88,7 @@ public class Checker {
                 }
             }
         } catch (IOException e) {
-            // Don't display an error
+            // ignore
         }
     }
 

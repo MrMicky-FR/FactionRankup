@@ -63,6 +63,6 @@ public class MFactionsManager implements IFactionManager {
     }
 
     private IFaction of(Faction faction) {
-        return new MFactionsImpl(faction);
+        return faction != null ? new MFactionsImpl(faction) : null;
     }
 }

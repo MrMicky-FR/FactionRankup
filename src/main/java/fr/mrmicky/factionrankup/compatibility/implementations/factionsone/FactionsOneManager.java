@@ -66,6 +66,6 @@ public class FactionsOneManager implements IFactionManager {
     }
 
     private IFaction of(Faction faction) {
-        return new FactionsOneImpl(faction);
+        return faction != null ? new FactionsOneImpl(faction) : null;
     }
 }
