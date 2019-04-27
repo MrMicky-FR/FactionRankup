@@ -26,15 +26,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Crops;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class AbilitiesListener implements Listener {
 
     private FactionRankup plugin;
-    private List<UUID> flying = new ArrayList<>();
+    private Set<UUID> flying = new HashSet<>();
 
     public AbilitiesListener(FactionRankup plugin) {
         this.plugin = plugin;

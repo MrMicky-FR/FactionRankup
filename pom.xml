@@ -15,7 +15,6 @@
     </properties>
 
     <build>
-        <!-- %%__USER__%% / %%__NONCE__%% -->
         <defaultGoal>clean package</defaultGoal>
         <finalName>${project.name}-${project.version}</finalName>
         <plugins>
