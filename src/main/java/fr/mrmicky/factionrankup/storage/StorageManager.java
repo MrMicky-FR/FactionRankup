@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public class StorageManager {
 
-    private Map<String, Integer> factionLevels = new HashMap<>();
-    private StorageProvider provider;
+    private final Map<String, Integer> factionLevels = new HashMap<>();
+    private final StorageProvider provider;
 
     public StorageManager(FactionRankup plugin) {
         /*ConfigurationSection sqlSection = plugin.getConfig().getConfigurationSection("sql");

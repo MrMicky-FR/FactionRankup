@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class AbilitiesTask extends BukkitRunnable {
 
-    private FactionRankup plugin;
+    private final FactionRankup plugin;
 
     public AbilitiesTask(FactionRankup plugin) {
         this.plugin = plugin;

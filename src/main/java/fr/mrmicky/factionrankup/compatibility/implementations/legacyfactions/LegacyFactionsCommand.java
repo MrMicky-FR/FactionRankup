@@ -2,10 +2,12 @@ package fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions;
 
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.FactionRankupCommand;
+import net.redstoneore.legacyfactions.cmd.CmdFactions;
 import net.redstoneore.legacyfactions.cmd.CmdFactionsHelp;
 import net.redstoneore.legacyfactions.cmd.FCommand;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LegacyFactionsCommand extends FCommand {
 
@@ -13,17 +15,17 @@ public class LegacyFactionsCommand extends FCommand {
         aliases.addAll(FactionRankupCommand.getRankupAliases());
         setHelpShort(FactionRankupCommand.getRankupHelp());
 
-        this.disableOnLock = true;
+        disableOnLock = true;
 
-        this.senderMustBePlayer = true;
-        this.senderMustBeMember = true;
-        this.senderMustBeModerator = false;
-        this.senderMustBeColeader = false;
-        this.senderMustBeAdmin = false;
+        senderMustBePlayer = true;
+        senderMustBeMember = true;
+        senderMustBeModerator = false;
+        senderMustBeColeader = false;
+        senderMustBeAdmin = false;
 
-        net.redstoneore.legacyfactions.cmd.CmdFactions.get().addSubCommand(this);
+        CmdFactions.get().addSubCommand(this);
 
-        ArrayList<ArrayList<String>> commands = CmdFactionsHelp.get().helpPages;
+        List<ArrayList<String>> commands = CmdFactionsHelp.get().helpPages;
 
         if (commands == null) {
             CmdFactionsHelp.get().updateHelp();

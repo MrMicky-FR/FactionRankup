@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * @author MrMicky
  */
-public class TitlesNMS {
+public final class TitlesNMS {
 
     // Packet sending
     private static final Field PLAYER_CONNECTION;

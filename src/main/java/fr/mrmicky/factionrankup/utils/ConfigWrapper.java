@@ -16,10 +16,10 @@ import java.util.logging.Level;
  */
 public class ConfigWrapper {
 
-    private Plugin plugin;
-    private String name;
+    private final Plugin plugin;
+    private final String name;
 
-    private File file;
+    private final File file;
     private FileConfiguration config;
 
     public ConfigWrapper(Plugin plugin, String name) {

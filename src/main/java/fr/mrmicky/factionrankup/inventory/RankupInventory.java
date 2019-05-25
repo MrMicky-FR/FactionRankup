@@ -38,8 +38,8 @@ public class RankupInventory extends FastInv {
 
     private static final Random RANDOM = new Random();
 
-    private FactionRankup plugin;
-    private IFaction faction;
+    private final FactionRankup plugin;
+    private final IFaction faction;
 
     public RankupInventory(FactionRankup plugin, Player p) {
         super(54, ChatUtils.color(plugin.getConfig().getString("rankup-inventory.name")));

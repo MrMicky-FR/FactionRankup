@@ -2,7 +2,7 @@ package fr.mrmicky.factionrankup.abilities;
 
 public class Ability {
 
-    private String name;
+    private final String name;
 
     public Ability(String name) {
         this.name = name;

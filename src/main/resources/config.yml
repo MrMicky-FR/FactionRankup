@@ -1,6 +1,8 @@
 # Don't touch this :)
 config-version: 2
 
+check-updates: true
+
 rankup-fireworks: true
 
 max-members-level-0: 2

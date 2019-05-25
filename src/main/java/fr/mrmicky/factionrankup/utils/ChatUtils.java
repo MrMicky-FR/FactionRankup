@@ -5,7 +5,11 @@ import org.bukkit.ChatColor;
 /**
  * @author MrMicky
  */
-public class ChatUtils {
+public final class ChatUtils {
+
+    private ChatUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     public static String color(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);

@@ -5,7 +5,12 @@ import fr.mrmicky.factionrankup.storage.StorageManager;
 import fr.mrmicky.factionrankup.storage.StorageProvider;
 import org.bukkit.Bukkit;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
@@ -23,9 +28,9 @@ public class SqlProvider implements StorageProvider {
     private static final String INSERT_FACTION = "INSERT INTO factionrankup_factions (`faction_id`, `level`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `level` = ?";
     private static final String REMOVE_FACTION = "DELETE FROM factionrankup_factions WHERE `faction_id` = ?";
 
-    private FactionRankup plugin;
-    private StorageManager storageManager;
-    private DatabaseCredentials credentials;
+    private final FactionRankup plugin;
+    private final StorageManager storageManager;
+    private final DatabaseCredentials credentials;
 
     private Connection connection;
 

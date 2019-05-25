@@ -10,8 +10,8 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class PotionAbility extends Ability {
 
-    private PotionEffectType effectType;
-    private int level;
+    private final PotionEffectType effectType;
+    private final int level;
 
     public PotionAbility(String name, ConfigurationSection config) {
         this(name, PotionEffectType.getByName(config.getString("effect")), config.getInt("level", 1));

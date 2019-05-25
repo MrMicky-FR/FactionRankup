@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * @author MrMicky
  */
-public class Titles {
+public final class Titles {
 
     private static boolean supportSendTitle;
     private static boolean supportSpigotActionBar;
@@ -30,6 +30,10 @@ public class Titles {
         } catch (NoSuchMethodException e) {
             supportSendTitle = false;
         }
+    }
+
+    private Titles() {
+        throw new UnsupportedOperationException();
     }
 
     public static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {

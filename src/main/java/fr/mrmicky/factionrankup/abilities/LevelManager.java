@@ -3,7 +3,13 @@ package fr.mrmicky.factionrankup.abilities;
 import fr.mrmicky.factionrankup.FactionRankup;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
@@ -12,10 +18,10 @@ import java.util.stream.Stream;
  */
 public class LevelManager {
 
-    private Map<String, BiFunction<String, ConfigurationSection, Ability>> abilites = new HashMap<>();
-    private List<Level> levels = new ArrayList<>();
+    private final Map<String, BiFunction<String, ConfigurationSection, Ability>> abilites = new HashMap<>();
+    private final List<Level> levels = new ArrayList<>();
 
-    private FactionRankup plugin;
+    private final FactionRankup plugin;
 
     public LevelManager(FactionRankup plugin) {
         this.plugin = plugin;

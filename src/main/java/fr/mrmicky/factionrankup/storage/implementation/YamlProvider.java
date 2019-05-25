@@ -23,10 +23,10 @@ factions:
 */
 public class YamlProvider implements StorageProvider {
 
-    private FactionRankup plugin;
-    private StorageManager storageManager;
+    private final FactionRankup plugin;
+    private final StorageManager storageManager;
 
-    private File storageFile;
+    private final File storageFile;
     private FileConfiguration storageConfig;
 
     private ConfigurationSection factionsSection;

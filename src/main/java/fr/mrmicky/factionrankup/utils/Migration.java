@@ -5,7 +5,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -13,7 +21,11 @@ import java.util.logging.Level;
 /**
  * @author MrMicky
  */
-public class Migration {
+public final class Migration {
+
+    private Migration() {
+        throw new UnsupportedOperationException();
+    }
 
     public static void migrateV2toV3(Plugin plugin) {
         File invFile = new File(plugin.getDataFolder(), "Inventory.yml");

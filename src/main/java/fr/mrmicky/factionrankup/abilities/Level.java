@@ -13,14 +13,15 @@ import java.util.Optional;
  */
 public class Level {
 
-    private int level;
-    private double cost;
-    private int maxMembers;
-    private String name;
-    private Material type;
-    private int data;
-    private List<String> description;
-    private List<Ability> abilities = new ArrayList<>();
+    private final List<Ability> abilities = new ArrayList<>();
+
+    private final int level;
+    private final double cost;
+    private final int maxMembers;
+    private final String name;
+    private final Material type;
+    private final int data;
+    private final List<String> description;
 
     public Level(int level, double cost, int maxMembers, String name, Material type, int data, List<String> description) {
         this.level = level;

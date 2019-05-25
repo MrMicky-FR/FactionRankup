@@ -12,9 +12,10 @@ public class FactionRankupEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private IFaction faction;
-    private int oldLevel;
-    private int newLevel;
+    private final IFaction faction;
+    private final int oldLevel;
+    private final int newLevel;
+
     private boolean cancelled = false;
 
     public FactionRankupEvent(IFaction faction, int oldLevel, int newLevel) {

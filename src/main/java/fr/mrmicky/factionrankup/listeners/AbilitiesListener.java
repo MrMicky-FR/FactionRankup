@@ -33,8 +33,9 @@ import java.util.UUID;
 
 public class AbilitiesListener implements Listener {
 
-    private FactionRankup plugin;
-    private Set<UUID> flying = new HashSet<>();
+    private final Set<UUID> flying = new HashSet<>();
+
+    private final FactionRankup plugin;
 
     public AbilitiesListener(FactionRankup plugin) {
         this.plugin = plugin;

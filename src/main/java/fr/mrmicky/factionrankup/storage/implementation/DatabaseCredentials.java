@@ -7,11 +7,11 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class DatabaseCredentials {
 
-    private String address;
-    private String database;
-    private String username;
-    private String password;
-    private int port;
+    private final String address;
+    private final String database;
+    private final String username;
+    private final String password;
+    private final int port;
 
     public DatabaseCredentials(String address, String database, String username, String password, int port) {
         this.address = address;

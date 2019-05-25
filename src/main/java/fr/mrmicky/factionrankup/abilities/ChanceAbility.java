@@ -11,7 +11,7 @@ public class ChanceAbility extends Ability {
 
     private static final Random RANDOM = new Random();
 
-    private int chance;
+    private final int chance;
 
     public ChanceAbility(String name, ConfigurationSection config) {
         this(name, config.getInt("chances", 100));

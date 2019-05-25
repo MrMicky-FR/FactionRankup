@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CommandRankup implements TabExecutor {
 
-    private FactionRankup plugin;
+    private final FactionRankup plugin;
 
     public CommandRankup(FactionRankup plugin) {
         this.plugin = plugin;

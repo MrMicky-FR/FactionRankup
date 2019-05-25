@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class CommandAbility extends Ability {
 
-    private String command;
+    private final String command;
 
     public CommandAbility(String name, ConfigurationSection config) {
         this(name, config.getString("command", ""));

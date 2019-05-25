@@ -14,7 +14,11 @@ import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.Leg
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.storage.StorageManager;
-import fr.mrmicky.factionrankup.utils.*;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
+import fr.mrmicky.factionrankup.utils.Checker;
+import fr.mrmicky.factionrankup.utils.ConfigWrapper;
+import fr.mrmicky.factionrankup.utils.FastReflection;
+import fr.mrmicky.factionrankup.utils.Migration;
 import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -30,7 +34,7 @@ public class FactionRankup extends JavaPlugin {
 
     private static FactionRankup instance;
 
-    private FactionType factionType = FactionType.FACTIONS;
+    private FactionType factionType;
     private StorageManager storageManager;
     private LevelManager levelManager;
 
@@ -43,8 +47,8 @@ public class FactionRankup extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Checker c = new Checker(this);
-        if (!c.isValid()) {
+        Checker checker = new Checker(this);
+        if (!checker.isValid()) {
             return;
         }
 
@@ -67,6 +71,8 @@ public class FactionRankup extends JavaPlugin {
                     factionType = FactionType.FACTIONS_ONE;
                 } else if (FastReflection.optionalClass("com.massivecraft.factions.FPlayer").isPresent()) {
                     factionType = FactionType.FACTIONS_UUID;
+                } else {
+                    factionType = FactionType.FACTIONS;
                 }
             } else if (getServer().getPluginManager().getPlugin("LegacyFactions") != null) {
                 factionType = FactionType.LEGACY_FACTIONS;
@@ -82,19 +88,23 @@ public class FactionRankup extends JavaPlugin {
         }
 
         if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
-            start(c);
+            start();
         } else {
             getLogger().warning("The plugin Factions is not enabled yet, delaying start...");
 
             getServer().getScheduler().runTask(this, () -> {
                 getLogger().info("Trying to enable again...");
                 if (factionType.isPluginEnabled()) {
-                    start(c);
+                    start();
                 } else {
-                    getLogger().severe("The plugin Factions is not enabled after start, disabling :(");
+                    getLogger().severe("The plugin Factions is not enabled after start, disabling...");
                     getServer().getPluginManager().disablePlugin(this);
                 }
             });
+        }
+
+        if (getConfig().getBoolean("check-updates")) {
+            getServer().getScheduler().runTaskAsynchronously(this, checker::checkUpdate);
         }
     }
 
@@ -105,7 +115,7 @@ public class FactionRankup extends JavaPlugin {
         }
     }
 
-    private void start(Checker c) {
+    private void start() {
         switch (factionType) {
             case FACTIONS:
                 Compatibility.setFactionManager(new MFactionsManager());
@@ -133,7 +143,7 @@ public class FactionRankup extends JavaPlugin {
         getCommand("frankup").setExecutor(new CommandRankup(this));
         getCommand("factionrankup").setExecutor(new CommandFactionrankup(this));
 
-        getLogger().info("Thank you " + c.getUsername() + "for purchasing FactionRankup :)");
+        getLogger().info("Using faction adapter " + factionType.getName() + " (" + USER_ID + ")");
     }
 
     public FactionType getFactionType() {
