@@ -6,7 +6,6 @@ import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.util.StringUtil;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandFactionrankup implements CommandExecutor, TabExecutor {
+public class CommandFactionrankup implements TabExecutor {
 
     private final FactionRankup plugin;
 
