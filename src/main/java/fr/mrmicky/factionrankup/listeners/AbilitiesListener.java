@@ -42,7 +42,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
-    public void onDeath(EntityDeathEvent e) {
+    public void onEntityDeathEvent(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Player) || e.getEntity().getKiller() == null) {
             return;
         }
@@ -57,7 +57,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
-    public void onExp(PlayerExpChangeEvent e) {
+    public void onPlayerExpChange(PlayerExpChangeEvent e) {
         Player p = e.getPlayer();
 
         if (isChanceAbilityActive(p, "DoubleXP")) {
@@ -67,7 +67,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onDamage(EntityDamageEvent e) {
+    public void onEntityDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player) || e.getCause() != DamageCause.FALL) {
             return;
         }
@@ -80,7 +80,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlace(BlockPlaceEvent e) {
+    public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         BlockState state = e.getBlockPlaced().getState();
 
@@ -98,7 +98,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onBreak(BlockBreakEvent e) {
+    public void onBlockBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
         // noinspection deprecation
         ItemStack item = p.getItemInHand();
@@ -122,6 +122,10 @@ public class AbilitiesListener implements Listener {
         Player p = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
+
+        if (to == null) {
+            return;
+        }
 
         if (from.getX() == to.getX() && from.getZ() == to.getZ()) {
             return;
