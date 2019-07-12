@@ -14,8 +14,8 @@ public class MultiplierAbility extends ChanceAbility {
 
     public MultiplierAbility(String name, ConfigurationSection config) {
         super(name, config);
-        min = config.getInt("min", 1);
-        max = config.getInt("max", 1);
+        min = config.getInt("min", 2);
+        max = config.getInt("max", 2);
     }
 
     public MultiplierAbility(String name, int chance, int min, int max) {

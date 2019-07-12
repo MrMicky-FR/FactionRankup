@@ -57,7 +57,7 @@ public class AbilitiesListener implements Listener {
         }
 
         int factionLevel = plugin.getFactionLevel(faction);
-        Optional<MultiplierAbility> ability = getActiveAbility(factionLevel, "DropMultiplier", MultiplierAbility.class);
+        Optional<MultiplierAbility> ability = getActiveAbility(factionLevel, "SpawnerBoost", MultiplierAbility.class);
 
         if (ability.isPresent() && ability.get().isActive()) {
             int multiplier = ability.get().nextRandomMultiplier();
@@ -73,7 +73,7 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
-    public void onEntitySpawn(EntityDeathEvent e) {
+    public void onEntityDeath(EntityDeathEvent e) {
         if (e.getEntity() instanceof Player || e.getEntity().getKiller() == null) {
             return;
         }
@@ -169,6 +169,10 @@ public class AbilitiesListener implements Listener {
         }
 
         if (from.getX() == to.getX() && from.getZ() == to.getZ()) {
+            return;
+        }
+
+        if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) {
             return;
         }
 

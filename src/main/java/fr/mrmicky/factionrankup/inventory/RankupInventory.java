@@ -156,6 +156,10 @@ public class RankupInventory extends FastInv {
         ItemStack item = new ItemStack(type == null ? Material.STONE : type, 1, (byte) data);
         ItemMeta meta = item.getItemMeta();
 
+        if (meta == null) {
+            return item;
+        }
+
         if (glow) {
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
         }

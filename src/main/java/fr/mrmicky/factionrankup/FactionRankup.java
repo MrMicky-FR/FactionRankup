@@ -46,24 +46,6 @@ public class FactionRankup extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Checker checker = new Checker(this);
-        if (!checker.isValid()) {
-            return;
-        }
-
-        instance = this;
-
-        FastInvManager.register(this);
-
-        Migration.migrateV2toV3(this);
-
-        saveDefaultConfig();
-        levels = new ConfigWrapper(this, "levels.yml");
-        messages = new ConfigWrapper(this, "messages.yml");
-
-        levelManager = new LevelManager(this);
-        levelManager.loadLevels();
-
         if (Compatibility.get() == null) {
             if (getServer().getPluginManager().getPlugin("Factions") != null) {
                 if (FastReflection.optionalClass("com.massivecraft.factions.FPlayer").isPresent()) {
@@ -83,6 +65,24 @@ public class FactionRankup extends JavaPlugin {
             factionType = FactionType.CUSTOM;
             getLogger().info("*** Using custom Faction ***");
         }
+
+        instance = this;
+
+        Checker checker = new Checker(this);
+        if (!checker.isValid()) {
+            return;
+        }
+
+        FastInvManager.register(this);
+
+        Migration.migrateV2toV3(this);
+
+        saveDefaultConfig();
+        levels = new ConfigWrapper(this, "levels.yml");
+        messages = new ConfigWrapper(this, "messages.yml");
+
+        levelManager = new LevelManager(this);
+        levelManager.loadLevels();
 
         if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
             start();
