@@ -1,10 +1,13 @@
 package fr.mrmicky.factionrankup.compatibility.implementations.factions;
 
+import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
+import com.massivecraft.massivecore.ps.PS;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -30,6 +33,11 @@ public class MFactionsManager implements IFactionManager {
     @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(MPlayer.get(player).getFaction());
+    }
+
+    @Override
+    public IFaction getFactionByLocation(Location location) {
+        return of(BoardColl.get().getFactionAt(PS.valueOf(location)));
     }
 
     @Override

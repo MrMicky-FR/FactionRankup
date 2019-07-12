@@ -1,10 +1,12 @@
 package fr.mrmicky.factionrankup.compatibility.implementations.factionsone;
 
+import com.factionsone.factions.Board;
 import com.factionsone.factions.FPlayers;
 import com.factionsone.factions.Faction;
 import com.factionsone.factions.Factions;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -33,6 +35,11 @@ public class FactionsOneManager implements IFactionManager {
     @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(FPlayers.i.get(player).getFaction());
+    }
+
+    @Override
+    public IFaction getFactionByLocation(Location location) {
+        return of(Board.getFactionAt(location));
     }
 
     @Override

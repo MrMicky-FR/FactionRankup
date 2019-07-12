@@ -2,9 +2,12 @@ package fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions;
 
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
+import net.redstoneore.legacyfactions.entity.Board;
 import net.redstoneore.legacyfactions.entity.FPlayerColl;
 import net.redstoneore.legacyfactions.entity.Faction;
 import net.redstoneore.legacyfactions.entity.FactionColl;
+import net.redstoneore.legacyfactions.locality.Locality;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -30,6 +33,11 @@ public class LegacyFactionsManager implements IFactionManager {
     @Override
     public IFaction getFactionByPlayer(Player player) {
         return of(FPlayerColl.get(player).getFaction());
+    }
+
+    @Override
+    public IFaction getFactionByLocation(Location location) {
+        return of(Board.get().getFactionAt(Locality.of(location)));
     }
 
     @Override
