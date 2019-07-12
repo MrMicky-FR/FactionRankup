@@ -1,6 +1,5 @@
-package fr.mrmicky.factionrankup.utils.nms;
+package fr.mrmicky.factionrankup.utils;
 
-import fr.mrmicky.factionrankup.utils.FastReflection;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Array;
@@ -11,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * @author MrMicky
  */
-public final class TitlesNMS {
+final class TitlesNMS {
 
     // Packet sending
     private static final Field PLAYER_CONNECTION;
@@ -77,7 +76,7 @@ public final class TitlesNMS {
         }
     }
 
-    public static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         try {
             if (title != null) {
                 Object packetTitle = PACKET_TITLE.newInstance(TITLE_ACTION_TITLE, getChatBaseComponent(title));
@@ -95,7 +94,7 @@ public final class TitlesNMS {
         }
     }
 
-    public static void sendActionbar(Player p, String message) {
+    static void sendActionbar(Player p, String message) {
         if (message == null) {
             return;
         }

@@ -1,6 +1,7 @@
 package fr.mrmicky.factionrankup.abilities;
 
 import fr.mrmicky.factionrankup.FactionRankup;
+import fr.mrmicky.factionrankup.utils.ChatUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
  */
 public class LevelManager {
 
-    private final Map<String, BiFunction<String, ConfigurationSection, Ability>> abilites = new HashMap<>();
+    private final Map<String, BiFunction<String, ConfigurationSection, Ability>> abilities = new HashMap<>();
     private final List<Level> levels = new ArrayList<>();
 
     private final FactionRankup plugin;
@@ -40,14 +41,14 @@ public class LevelManager {
         ConfigurationSection levelsConfig = plugin.getLevelsConfig().getConfigurationSection("levels");
 
         for (String key : levelsConfig.getKeys(false)) {
-            OptionalInt levelInt = getInt(key);
+            int level = ChatUtils.parseInt(key);
 
-            if (!levelInt.isPresent()) {
+            if (level < 0) {
                 plugin.getLogger().warning("Invalid level: " + key);
                 continue;
             }
 
-            levels.add(Level.fromConfig(levelsConfig.getConfigurationSection(key), levelInt.getAsInt()));
+            levels.add(Level.fromConfig(levelsConfig.getConfigurationSection(key), level));
         }
     }
 
@@ -56,17 +57,17 @@ public class LevelManager {
     }
 
     public void registerAbility(String ability, BiFunction<String, ConfigurationSection, Ability> function) {
-        abilites.put(ability, function);
+        abilities.put(ability, function);
     }
 
     public Optional<Ability> createAbility(ConfigurationSection config) {
         String name = config.getString("name");
 
-        if (name == null || !abilites.containsKey(name)) {
+        if (name == null || !abilities.containsKey(name)) {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(abilites.get(name).apply(name, config));
+        return Optional.ofNullable(abilities.get(name).apply(name, config));
     }
 
     public Stream<Ability> getAbilitiesForLevel(int level) {
@@ -95,11 +96,4 @@ public class LevelManager {
         return levels.size() + 1;
     }
 
-    private OptionalInt getInt(String s) {
-        try {
-            return OptionalInt.of(Integer.parseInt(s));
-        } catch (NumberFormatException e) {
-            return OptionalInt.empty();
-        }
-    }
 }

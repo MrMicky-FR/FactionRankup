@@ -20,7 +20,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,26 +42,26 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeathEvent(EntityDeathEvent e) {
-        if (!(e.getEntity() instanceof Player) || e.getEntity().getKiller() == null) {
+    public void onPlayerDeathEvent(PlayerDeathEvent e) {
+        if (e.getEntity().getKiller() == null) {
             return;
         }
 
-        Player p = (Player) e.getEntity();
+        Player player = e.getEntity();
         Player killer = e.getEntity().getKiller();
 
-        if (isChanceAbilityActive(p, "MoreDrops")) {
+        if (isChanceAbilityActive(player, "MoreDrops")) {
             sendActionbar(killer, "moredrops");
-            e.getDrops().forEach(item -> p.getWorld().dropItemNaturally(p.getLocation(), item));
+            e.getDrops().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
         }
     }
 
     @EventHandler
     public void onPlayerExpChange(PlayerExpChangeEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
 
-        if (isChanceAbilityActive(p, "DoubleXP")) {
-            sendActionbar(p, "double-xp");
+        if (isChanceAbilityActive(player, "DoubleXP")) {
+            sendActionbar(player, "double-xp");
             e.setAmount(e.getAmount() * 2);
         }
     }
@@ -72,54 +72,54 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
-        Player p = (Player) e.getEntity();
-        if (isChanceAbilityActive(p, "ReduceFalls")) {
-            sendActionbar(p, "reducefall");
+        Player player = (Player) e.getEntity();
+        if (isChanceAbilityActive(player, "ReduceFalls")) {
+            sendActionbar(player, "reducefall");
             e.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         BlockState state = e.getBlockPlaced().getState();
 
         if (!(state.getData() instanceof Crops)) {
             return;
         }
 
-        if (isChanceAbilityActive(p, "InstantCrops")) {
+        if (isChanceAbilityActive(player, "InstantCrops")) {
             Crops crops = (Crops) state.getData();
             crops.setState(CropState.RIPE);
             state.update();
 
-            sendActionbar(p, "instantcrops");
+            sendActionbar(player, "instantcrops");
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         // noinspection deprecation
-        ItemStack item = p.getItemInHand();
+        ItemStack item = player.getItemInHand();
 
         if (item == null || item.getType() == Material.AIR || item.containsEnchantment(Enchantment.SILK_TOUCH)
-                || !Enchantment.SILK_TOUCH.canEnchantItem(item) || p.getGameMode() != GameMode.SURVIVAL) {
+                || !Enchantment.SILK_TOUCH.canEnchantItem(item) || player.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
 
-        if (isChanceAbilityActive(p, "SilkTouch")) {
-            sendActionbar(p, "silktouch");
+        if (isChanceAbilityActive(player, "SilkTouch")) {
+            sendActionbar(player, "silktouch");
 
             item.addEnchantment(Enchantment.SILK_TOUCH, 1);
             // noinspection deprecation
-            Bukkit.getScheduler().runTask(plugin, () -> p.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
+            Bukkit.getScheduler().runTask(plugin, () -> player.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
         }
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        Player p = event.getPlayer();
+        Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
 
@@ -131,39 +131,39 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
-        if (isAbilityActive(p, "Fly")) {
-            if (Compatibility.get().isInOwnTerritory(p)) {
-                if (!p.getAllowFlight()) {
-                    if (!flying.contains(p.getUniqueId())) {
-                        flying.add(p.getUniqueId());
-                        p.setAllowFlight(true);
-                        sendActionbar(p, "fly-enabled");
+        if (isAbilityActive(player, "Fly")) {
+            if (Compatibility.get().isInOwnTerritory(player)) {
+                if (!player.getAllowFlight()) {
+                    if (!flying.contains(player.getUniqueId())) {
+                        flying.add(player.getUniqueId());
+                        player.setAllowFlight(true);
+                        sendActionbar(player, "fly-enabled");
                     }
                 }
-            } else if (p.getAllowFlight()) {
-                if (flying.contains(p.getUniqueId())) {
-                    flying.remove(p.getUniqueId());
-                    p.setAllowFlight(false);
-                    sendActionbar(p, "fly-disabled");
+            } else if (player.getAllowFlight()) {
+                if (flying.contains(player.getUniqueId())) {
+                    flying.remove(player.getUniqueId());
+                    player.setAllowFlight(false);
+                    sendActionbar(player, "fly-disabled");
                 }
             }
         }
     }
 
-    private void sendActionbar(Player p, String s) {
+    private void sendActionbar(Player player, String s) {
         if (!s.isEmpty()) {
-            Titles.sendActionBar(p, plugin.getMessage(s));
+            Titles.sendActionBar(player, plugin.getMessage(s));
         }
     }
 
-    private boolean isAbilityActive(Player p, String name) {
-        int level = plugin.getFactionLevel(p);
+    private boolean isAbilityActive(Player player, String name) {
+        int level = plugin.getFactionLevel(player);
 
         return plugin.getLevelManager().getAbilitiesForLevel(level, name).findAny().isPresent();
     }
 
-    private boolean isChanceAbilityActive(Player p, String name) {
-        int level = plugin.getFactionLevel(p);
+    private boolean isChanceAbilityActive(Player player, String name) {
+        int level = plugin.getFactionLevel(player);
 
         Optional<Ability> ability = plugin.getLevelManager().getAbilitiesForLevel(level, name)
                 .filter(a -> a.getClass() == ChanceAbility.class)

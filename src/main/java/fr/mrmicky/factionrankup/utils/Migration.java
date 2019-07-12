@@ -4,15 +4,12 @@ import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.FileUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,24 +33,20 @@ public final class Migration {
 
         plugin.getLogger().warning("Migrating FactionRankup v2 to v3 !");
 
-        try {
-            File originalPluginDir = plugin.getDataFolder();
-            File backupDir = new File(plugin.getDataFolder().getParentFile(), "FactionRankup-v2-backup");
+        File originalPluginDir = plugin.getDataFolder();
+        File backupDir = new File(plugin.getDataFolder().getParentFile(), "FactionRankup-v2-backup");
 
-            originalPluginDir.renameTo(backupDir);
+        originalPluginDir.renameTo(backupDir);
 
-            File backupData = new File(backupDir, "data.yml");
+        File backupFile = new File(backupDir, "data.yml");
 
-            if (backupData.exists()) {
-                plugin.getDataFolder().mkdirs();
+        if (backupFile.exists()) {
+            plugin.getDataFolder().mkdirs();
 
-                copyFile(backupData, new File(plugin.getDataFolder(), "data.yml"));
-            }
-            plugin.getLogger().info("Migration to v3 done");
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Cannot migrate to v3", e);
+            FileUtil.copy(backupFile, new File(plugin.getDataFolder(), "data.yml"));
         }
 
+        plugin.getLogger().info("Migration to v3 done");
     }
 
     public static void migrateV3_1toV3_2(Plugin plugin) {
@@ -120,17 +113,6 @@ public final class Migration {
             }
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Error during migration", e);
-        }
-    }
-
-    private static void copyFile(File source, File target) throws IOException {
-        try (InputStream in = new FileInputStream(source);
-             OutputStream out = new FileOutputStream(target)) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
-            }
         }
     }
 }

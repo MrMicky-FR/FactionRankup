@@ -5,6 +5,7 @@ description: Rank up your Faction and get the strongest. With abilities for each
 softdepend: [Factions, LegacyFactions]
 website: https://www.spigotmc.org/resources/factionrankup.43316/
 main: fr.mrmicky.factionrankup.FactionRankup
+api-version: 1.13
 commands:
   frankup:
     description: Rankup your faction

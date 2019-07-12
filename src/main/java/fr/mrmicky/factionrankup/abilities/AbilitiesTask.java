@@ -21,21 +21,21 @@ public class AbilitiesTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            int level = plugin.getFactionLevel(p);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            int level = plugin.getFactionLevel(player);
 
             if (level <= 0) {
                 continue;
             }
 
-            Collection<PotionEffect> effects = p.getActivePotionEffects();
+            Collection<PotionEffect> effects = player.getActivePotionEffects();
 
             plugin.getLevelManager().getAbilitiesForLevel(level)
                     .filter(ability -> ability.getClass() == PotionAbility.class)
                     .map(PotionAbility.class::cast)
                     .filter(a -> a.getEffectType() != null)
                     .filter(a -> !hasEffect(a.getEffectType(), a.getEffectLevel(), effects))
-                    .forEach(ability -> p.addPotionEffect(ability.createPotionEffect(), true));
+                    .forEach(a -> player.addPotionEffect(a.createPotionEffect(), true));
         }
     }
 

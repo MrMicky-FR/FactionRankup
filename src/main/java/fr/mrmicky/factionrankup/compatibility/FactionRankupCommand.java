@@ -9,8 +9,8 @@ import java.util.List;
 
 public class FactionRankupCommand {
 
-    public static void executeRankup(Player p) {
-        CommandRankup.execute(FactionRankup.getInstance(), p);
+    public static void executeRankup(Player player) {
+        CommandRankup.execute(FactionRankup.getInstance(), player);
     }
 
     public static String getRankupHelp() {

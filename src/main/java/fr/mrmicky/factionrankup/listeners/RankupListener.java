@@ -22,7 +22,7 @@ public class RankupListener implements Listener {
         if (plugin.getConfig().getBoolean("level-in-chat")) {
             int level = plugin.getFactionLevel(e.getPlayer());
 
-            String format = ChatUtils.color(plugin.getConfig().getString("chat-prefix")).replace("%level%", String.valueOf(level));
+            String format = ChatUtils.color(plugin.getConfig().getString("chat-prefix")).replace("%level%", Integer.toString(level));
             e.setFormat(format + e.getFormat());
         }
     }
