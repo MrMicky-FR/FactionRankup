@@ -6,7 +6,6 @@ public enum FactionType {
 
     FACTIONS("Faction"),
     FACTIONS_UUID("FactionsUUID"),
-    FACTIONS_ONE("FactionsOne"),
     LEGACY_FACTIONS("LegacyFactions"),
     CUSTOM("Custom");
 
