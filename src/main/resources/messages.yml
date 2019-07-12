@@ -10,7 +10,7 @@ max-level: "%prefix% &cYou are already the highest level!"
 # Abilities messages, will be display in actionbar if you are in a 1.8+ server or in chat in 1.7 servers. Set to "" a message to disable it
 double-xp: "%prefix% You got double xp"
 silktouch: "%prefix% Block mined with silktouch"
-moredrops: "%prefix% You got player's inventory x2"
+drop-multiplier: "%prefix% You drops was multiplied by %chances%"
 reducefall: "%prefix% Your fall damages was cancelled"
 fly-enabled: "%prefix% Fly &aenabled&3, you are in your faction"
 fly-disabled: "%prefix% Fly &cdisabled&3, you are not in your faction"

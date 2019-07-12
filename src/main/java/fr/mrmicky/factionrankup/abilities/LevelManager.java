@@ -30,11 +30,11 @@ public class LevelManager {
         registerAbility("Command", (name, conf) -> new CommandAbility(name, conf.getString("command", "")));
         registerAbility("PotionEffect", PotionAbility::new);
         registerAbility("Fly", (name, conf) -> new Ability(name));
-        registerAbility("MoreDrops", ChanceAbility::new);
         registerAbility("ReduceFalls", ChanceAbility::new);
         registerAbility("SilkTouch", ChanceAbility::new);
         registerAbility("DoubleXP", ChanceAbility::new);
         registerAbility("InstantCrops", ChanceAbility::new);
+        registerAbility("DropMultiplier", DropsMultiplierAbility::new);
     }
 
     public void loadLevels() {
@@ -62,6 +62,10 @@ public class LevelManager {
 
     public Optional<Ability> createAbility(ConfigurationSection config) {
         String name = config.getString("name");
+
+        if (name != null && name.equalsIgnoreCase("MoreDrops")) {
+            name = "DropMultiplier";
+        }
 
         if (name == null || !abilities.containsKey(name)) {
             return Optional.empty();

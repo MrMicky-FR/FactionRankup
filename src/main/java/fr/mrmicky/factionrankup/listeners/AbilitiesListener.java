@@ -3,6 +3,7 @@ package fr.mrmicky.factionrankup.listeners;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.abilities.Ability;
 import fr.mrmicky.factionrankup.abilities.ChanceAbility;
+import fr.mrmicky.factionrankup.abilities.DropsMultiplierAbility;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +22,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +32,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 public class AbilitiesListener implements Listener {
 
@@ -42,17 +45,27 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeathEvent(PlayerDeathEvent e) {
-        if (e.getEntity().getKiller() == null) {
+    public void onEntitySpawn(EntityDeathEvent e) {
+        if (e.getEntity() instanceof Player || e.getEntity().getKiller() == null) {
             return;
         }
 
-        Player player = e.getEntity();
-        Player killer = e.getEntity().getKiller();
+        LivingEntity entity = e.getEntity();
+        Player killer = entity.getKiller();
 
-        if (isChanceAbilityActive(player, "MoreDrops")) {
-            sendActionbar(killer, "moredrops");
-            e.getDrops().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
+        Optional<DropsMultiplierAbility> ability = getActiveAbility(killer, "DropMultiplier", DropsMultiplierAbility.class);
+        if (ability.isPresent() && ability.get().isActive()) {
+            int multiplier = ability.get().nextRandomMultiplier();
+
+            if (multiplier <= 1) {
+                return;
+            }
+
+            sendActionbar(killer, "drop-multiplier", s -> s.replace("%chances%", Integer.toString(multiplier)));
+
+            for (int i = 1; i < multiplier; i++) {
+                e.getDrops().forEach(item -> entity.getWorld().dropItemNaturally(entity.getLocation(), item));
+            }
         }
     }
 
@@ -150,9 +163,13 @@ public class AbilitiesListener implements Listener {
         }
     }
 
-    private void sendActionbar(Player player, String s) {
-        if (!s.isEmpty()) {
-            Titles.sendActionBar(player, plugin.getMessage(s));
+    private void sendActionbar(Player player, String path) {
+        sendActionbar(player, path, UnaryOperator.identity());
+    }
+
+    private void sendActionbar(Player player, String path, UnaryOperator<String> operator) {
+        if (!path.isEmpty()) {
+            Titles.sendActionBar(player, operator.apply(plugin.getMessage(path)));
         }
     }
 
@@ -162,14 +179,16 @@ public class AbilitiesListener implements Listener {
         return plugin.getLevelManager().getAbilitiesForLevel(level, name).findAny().isPresent();
     }
 
-    private boolean isChanceAbilityActive(Player player, String name) {
+    private <T extends Ability> Optional<T> getActiveAbility(Player player, String name, Class<T> abilityClass) {
         int level = plugin.getFactionLevel(player);
 
-        Optional<Ability> ability = plugin.getLevelManager().getAbilitiesForLevel(level, name)
-                .filter(a -> a.getClass() == ChanceAbility.class)
-                .findFirst();
+        return plugin.getLevelManager().getAbilitiesForLevel(level, name)
+                .filter(abilityClass::isInstance)
+                .map(abilityClass::cast)
+                .findAny();
+    }
 
-        return ability.filter(ability1 -> ((ChanceAbility) ability1).isActive()).isPresent();
-
+    private boolean isChanceAbilityActive(Player player, String name) {
+        return getActiveAbility(player, name, ChanceAbility.class).filter(ChanceAbility::isActive).isPresent();
     }
 }

@@ -11,7 +11,7 @@ levels:
       - '&7You will have 10% of chances to have'
       - '&7silktouch on your tool when mining'
     ability:
-      name: "SilkTouch" # Name of the ability. Can be Fly, MoreDrops, ReduceFalls, SilkTouch, DoubleXP
+      name: "SilkTouch" # Name of the ability. Can be Fly, DropMultiplier, ReduceFalls, SilkTouch, DoubleXP
       chances: 10 # % of chances to have the effect
   2:
     cost: 30000
@@ -22,10 +22,12 @@ levels:
       data: 0
       description:
       - '&7You will have 25% of chances to get'
-      - '&72x the inventory of a player when killing'
+      - '&7more drops when you kill an entity'
       - '&7a player'
     ability:
-      name: "MoreDrops"
+      name: "DropMultiplier"
+      min: 2
+      max: 5
       chances: 25
   3:
     cost: 40000
