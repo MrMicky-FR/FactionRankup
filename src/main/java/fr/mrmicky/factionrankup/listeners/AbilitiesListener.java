@@ -3,8 +3,9 @@ package fr.mrmicky.factionrankup.listeners;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.abilities.Ability;
 import fr.mrmicky.factionrankup.abilities.ChanceAbility;
-import fr.mrmicky.factionrankup.abilities.DropsMultiplierAbility;
+import fr.mrmicky.factionrankup.abilities.MultiplierAbility;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
+import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.utils.Titles;
 import org.bukkit.Bukkit;
 import org.bukkit.CropState;
@@ -12,6 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,6 +25,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -45,6 +48,31 @@ public class AbilitiesListener implements Listener {
     }
 
     @EventHandler
+    public void onSpawnerSpawn(SpawnerSpawnEvent e) {
+        CreatureSpawner spawner = e.getSpawner();
+
+        IFaction faction = Compatibility.get().getFactionByLocation(spawner.getLocation());
+        if (faction == null) {
+            return;
+        }
+
+        int factionLevel = plugin.getFactionLevel(faction);
+        Optional<MultiplierAbility> ability = getActiveAbility(factionLevel, "DropMultiplier", MultiplierAbility.class);
+
+        if (ability.isPresent() && ability.get().isActive()) {
+            int multiplier = ability.get().nextRandomMultiplier();
+
+            if (multiplier <= 1) {
+                return;
+            }
+
+            for (int i = 1; i < multiplier; i++) {
+                spawner.getWorld().spawnEntity(spawner.getLocation().add(0, 0, 1), e.getEntityType());
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntitySpawn(EntityDeathEvent e) {
         if (e.getEntity() instanceof Player || e.getEntity().getKiller() == null) {
             return;
@@ -53,7 +81,7 @@ public class AbilitiesListener implements Listener {
         LivingEntity entity = e.getEntity();
         Player killer = entity.getKiller();
 
-        Optional<DropsMultiplierAbility> ability = getActiveAbility(killer, "DropMultiplier", DropsMultiplierAbility.class);
+        Optional<MultiplierAbility> ability = getActiveAbility(killer, "DropMultiplier", MultiplierAbility.class);
         if (ability.isPresent() && ability.get().isActive()) {
             int multiplier = ability.get().nextRandomMultiplier();
 
@@ -180,9 +208,11 @@ public class AbilitiesListener implements Listener {
     }
 
     private <T extends Ability> Optional<T> getActiveAbility(Player player, String name, Class<T> abilityClass) {
-        int level = plugin.getFactionLevel(player);
+        return getActiveAbility(plugin.getFactionLevel(player), name, abilityClass);
+    }
 
-        return plugin.getLevelManager().getAbilitiesForLevel(level, name)
+    private <T extends Ability> Optional<T> getActiveAbility(int factionLevel, String name, Class<T> abilityClass) {
+        return plugin.getLevelManager().getAbilitiesForLevel(factionLevel, name)
                 .filter(abilityClass::isInstance)
                 .map(abilityClass::cast)
                 .findAny();

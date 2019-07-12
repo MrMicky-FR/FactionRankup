@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
@@ -34,7 +33,8 @@ public class LevelManager {
         registerAbility("SilkTouch", ChanceAbility::new);
         registerAbility("DoubleXP", ChanceAbility::new);
         registerAbility("InstantCrops", ChanceAbility::new);
-        registerAbility("DropMultiplier", DropsMultiplierAbility::new);
+        registerAbility("DropMultiplier", MultiplierAbility::new);
+        registerAbility("SpawnerBoost", MultiplierAbility::new);
     }
 
     public void loadLevels() {
