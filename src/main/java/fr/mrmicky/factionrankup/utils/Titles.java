@@ -17,14 +17,14 @@ public final class Titles {
 
     static {
         try {
-            Player.Spigot.class.getDeclaredMethod("sendMessage", ChatMessageType.class, BaseComponent.class);
+            Player.Spigot.class.getMethod("sendMessage", ChatMessageType.class, BaseComponent.class);
             supportSpigotActionBar = true;
         } catch (NoSuchMethodException e) {
             supportSpigotActionBar = false;
         }
 
         try {
-            Player.class.getDeclaredMethod("sendTitle", String.class, String.class, int.class, int.class, int.class);
+            Player.class.getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class);
             supportSendTitle = true;
         } catch (NoSuchMethodException e) {
             supportSendTitle = false;

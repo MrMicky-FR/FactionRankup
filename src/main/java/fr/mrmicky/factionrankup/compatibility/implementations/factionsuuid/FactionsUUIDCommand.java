@@ -35,7 +35,7 @@ public class FactionsUUIDCommand extends FCommand {
             try {
                 Plugin factionPlugin = Bukkit.getPluginManager().getPlugin(FactionType.FACTIONS_UUID.getPluginName());
 
-                cmdBase = (FCmdRoot) factionPlugin.getClass().getDeclaredField("cmdBase").get(factionPlugin);
+                cmdBase = (FCmdRoot) factionPlugin.getClass().getField("cmdBase").get(factionPlugin);
             } catch (Exception e) {
                 throw new RuntimeException("Unsuported Factions plugin", e);
             }
