@@ -20,18 +20,18 @@ public class CommandRankup implements TabExecutor {
         this.plugin = plugin;
     }
 
-    public static void execute(FactionRankup plugin, Player p) {
-        if (!p.hasPermission("factionranking.openmenu") && !p.hasPermission("factionrankup.use")) {
-            p.sendMessage(plugin.getMessage("no-permission"));
+    public static void execute(FactionRankup plugin, Player player) {
+        if (!player.hasPermission("factionranking.openmenu") && !player.hasPermission("factionrankup.use")) {
+            player.sendMessage(plugin.getMessage("no-permission"));
             return;
         }
 
-        if (!Compatibility.get().hasFaction(p)) {
-            p.sendMessage(plugin.getMessage("no-faction"));
+        if (!Compatibility.get().hasFaction(player)) {
+            player.sendMessage(plugin.getMessage("no-faction"));
             return;
         }
 
-        new RankupInventory(plugin, p).open(p);
+        new RankupInventory(plugin, player).open(player);
     }
 
     @Override

@@ -6,7 +6,7 @@
 
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup</artifactId>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
 
     <name>FactionRankup</name>
 
@@ -46,6 +46,11 @@
                             <pattern>fr.mrmicky.fastinv</pattern>
                             <shadedPattern>fr.mrmicky.factionrankup.fastinv</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <!-- Support for outdated FactionsUUID forks -->
+                            <pattern>com.massivecraft.factions.cmd.legacy</pattern>
+                            <shadedPattern>com.massivecraft.factions.cmd</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
             </plugin>
@@ -64,12 +69,12 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>factions-repo</id>
             <url>http://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -91,25 +96,25 @@
         <!-- FactionsUUID -->
         <dependency>
             <groupId>com.massivecraft</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-U0.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- FactionsUUID Legacy -->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
             <artifactId>factions-uuid</artifactId>
             <version>1.6.9.5-U0.2.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/FactionsUUID.jar</systemPath>
+            <systemPath>${basedir}/libs/FactionsUUID-Legacy.jar</systemPath>
         </dependency>
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>factions</artifactId>
+            <artifactId>massivefactions</artifactId>
             <version>2.14.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/libs/Factions.jar</systemPath>
-        </dependency>
-        <!-- LegacyFactions -->
-        <dependency>
-            <groupId>com.github.redstone</groupId>
-            <artifactId>LegacyFactions</artifactId>
-            <version>v1.4.3</version>
-            <scope>provided</scope>
         </dependency>
         <!-- MassiveCore -->
         <dependency>
@@ -118,6 +123,13 @@
             <version>2.14.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/libs/MassiveCore.jar</systemPath>
+        </dependency>
+        <!-- LegacyFactions -->
+        <dependency>
+            <groupId>com.github.redstone</groupId>
+            <artifactId>LegacyFactions</artifactId>
+            <version>v1.4.3</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

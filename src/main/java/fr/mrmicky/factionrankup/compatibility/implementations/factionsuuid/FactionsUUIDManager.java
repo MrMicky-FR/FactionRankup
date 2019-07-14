@@ -7,6 +7,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
+import fr.mrmicky.factionrankup.utils.FastReflection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -16,7 +17,11 @@ import java.util.stream.Collectors;
 public class FactionsUUIDManager implements IFactionManager {
 
     public FactionsUUIDManager() {
-        new FactionsUUIDCommand();
+        if (FastReflection.optionalClass("com.massivecraft.factions.zcore.MCommand").isPresent()) {
+            new FactionsUUIDCommandLegacy();
+        } else {
+            new FactionsUUIDCommand();
+        }
         new FactionsUUIDListener();
     }
 
