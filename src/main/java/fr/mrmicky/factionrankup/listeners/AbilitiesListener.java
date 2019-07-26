@@ -12,6 +12,8 @@ import org.bukkit.CropState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -68,6 +71,39 @@ public class AbilitiesListener implements Listener {
 
             for (int i = 1; i < multiplier; i++) {
                 spawner.getWorld().spawnEntity(spawner.getLocation().add(0, 0, 1), e.getEntityType());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockGrow(BlockGrowEvent e) {
+        Block block = e.getBlock();
+
+        IFaction faction = Compatibility.get().getFactionByLocation(block.getLocation());
+        if (faction == null) {
+            return;
+        }
+
+
+        int factionLevel = plugin.getFactionLevel(faction);
+        Optional<ChanceAbility> ability = getActiveAbility(factionLevel, "FarmBoost", ChanceAbility.class);
+
+        if (!ability.isPresent() || !ability.get().isActive()) {
+            return;
+        }
+
+        BlockState state = e.getNewState();
+
+        if (state.getData() instanceof Crops) {
+            ((Crops) state.getData()).setState(CropState.RIPE);
+            return;
+        }
+
+        if (state.getType() == Material.CACTUS || state.getType().toString().contains("SUGAR_CANE")) {
+            Block topBlock = block.getRelative(BlockFace.UP);
+
+            if (topBlock.getType() == Material.AIR) {
+                topBlock.setType(state.getType());
             }
         }
     }

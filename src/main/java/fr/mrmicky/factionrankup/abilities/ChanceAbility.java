@@ -2,14 +2,12 @@ package fr.mrmicky.factionrankup.abilities;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author MrMicky
  */
 public class ChanceAbility extends Ability {
-
-    private static final Random RANDOM = new Random();
 
     private final int chance;
 
@@ -23,6 +21,6 @@ public class ChanceAbility extends Ability {
     }
 
     public boolean isActive() {
-        return chance > RANDOM.nextInt(100);
+        return chance > ThreadLocalRandom.current().nextInt(100);
     }
 }

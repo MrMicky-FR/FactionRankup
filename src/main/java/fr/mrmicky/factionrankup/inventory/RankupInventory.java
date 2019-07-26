@@ -29,14 +29,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.UnaryOperator;
 
 /**
  * @author MrMicky
  */
 public class RankupInventory extends FastInv {
-
-    private static final Random RANDOM = new Random();
 
     private final FactionRankup plugin;
     private final IFaction faction;
@@ -182,7 +181,8 @@ public class RankupInventory extends FastInv {
     }
 
     private Color getRandomColor() {
-        return Color.fromRGB(RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
+        Random random = ThreadLocalRandom.current();
+        return Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     }
 
     private String replacePlaceholder(Player player, String msg, String faction, int level) {
@@ -202,7 +202,7 @@ public class RankupInventory extends FastInv {
                 Firework f = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
                 FireworkMeta fm = f.getFireworkMeta();
                 fm.addEffects(FireworkEffect.builder().withColor(getRandomColor()).withFade(getRandomColor()).trail(true).build());
-                fm.setPower(RANDOM.nextInt(3));
+                fm.setPower(ThreadLocalRandom.current().nextInt(3));
                 f.setFireworkMeta(fm);
 
                 if (i-- < 0) {

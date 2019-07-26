@@ -35,6 +35,7 @@ public class LevelManager {
         registerAbility("InstantCrops", ChanceAbility::new);
         registerAbility("DropMultiplier", MultiplierAbility::new);
         registerAbility("SpawnerBoost", MultiplierAbility::new);
+        registerAbility("FarmBoost", ChanceAbility::new);
     }
 
     public void loadLevels() {
