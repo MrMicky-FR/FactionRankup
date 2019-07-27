@@ -7,8 +7,8 @@ import fr.mrmicky.factionrankup.abilities.MultiplierAbility;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.utils.Titles;
+import fr.mrmicky.factionrankup.utils.crops.CropsData;
 import org.bukkit.Bukkit;
-import org.bukkit.CropState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,7 +32,6 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Crops;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -93,9 +92,10 @@ public class AbilitiesListener implements Listener {
         }
 
         BlockState state = e.getNewState();
+        CropsData cropsData = CropsData.of(state);
 
-        if (state.getData() instanceof Crops) {
-            ((Crops) state.getData()).setState(CropState.RIPE);
+        if (cropsData != null) {
+            cropsData.setRipe();
             return;
         }
 
@@ -161,13 +161,14 @@ public class AbilitiesListener implements Listener {
         Player player = e.getPlayer();
         BlockState state = e.getBlockPlaced().getState();
 
-        if (!(state.getData() instanceof Crops)) {
+        CropsData cropsData = CropsData.of(state);
+
+        if (cropsData == null) {
             return;
         }
 
         if (isChanceAbilityActive(player, "InstantCrops")) {
-            Crops crops = (Crops) state.getData();
-            crops.setState(CropState.RIPE);
+            cropsData.setRipe();
             state.update();
 
             sendActionbar(player, "instantcrops");
