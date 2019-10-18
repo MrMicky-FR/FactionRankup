@@ -1,12 +1,11 @@
 package fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid;
 
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.zcore.util.TL;
+import com.massivecraft.factions.util.TL;
 import fr.mrmicky.factionrankup.compatibility.FactionRankupCommand;
 
 public class FactionsUUIDCommand extends FCommand {
@@ -19,9 +18,13 @@ public class FactionsUUIDCommand extends FCommand {
                 .memberOnly()
                 .build();
 
-        FCmdRoot cmdBase = P.p.cmdBase;
+        try {
+            Class.forName("com.massivecraft.factions.FactionsPlugin");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Unsupported FactionsUUID version, try to update FactionsUUID");
+        }
 
-        cmdBase.addSubCommand(this);
+        FCmdRoot.getInstance().addSubCommand(this);
     }
 
     @Override

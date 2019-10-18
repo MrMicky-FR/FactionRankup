@@ -30,7 +30,10 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -83,7 +86,6 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
-
         int factionLevel = plugin.getFactionLevel(faction);
         Optional<ChanceAbility> ability = getActiveAbility(factionLevel, "FarmBoost", ChanceAbility.class);
 
@@ -130,6 +132,20 @@ public class AbilitiesListener implements Listener {
             for (int i = 1; i < multiplier; i++) {
                 e.getDrops().forEach(item -> entity.getWorld().dropItemNaturally(entity.getLocation(), item));
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        handleMove(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+
+        if (flying.remove(player.getUniqueId())) {
+            player.setAllowFlight(false);
         }
     }
 
@@ -209,6 +225,15 @@ public class AbilitiesListener implements Listener {
             return;
         }
 
+        handleMove(player);
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent e) {
+        Bukkit.getScheduler().runTask(plugin, () -> handleMove(e.getPlayer()));
+    }
+
+    private void handleMove(Player player) {
         if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) {
             return;
         }

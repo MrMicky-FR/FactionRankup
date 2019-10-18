@@ -15,8 +15,10 @@ import java.util.stream.Collectors;
 
 public class MFactionsManager implements IFactionManager {
 
+    private MFactionCommand command;
+
     public MFactionsManager() {
-        new MFactionCommand();
+        command = new MFactionCommand();
         new MFactionListener();
     }
 
@@ -72,5 +74,10 @@ public class MFactionsManager implements IFactionManager {
 
     private IFaction of(Faction faction) {
         return faction != null ? new MFactionsImpl(faction) : null;
+    }
+
+    @Override
+    public void disable() {
+        command.close();
     }
 }

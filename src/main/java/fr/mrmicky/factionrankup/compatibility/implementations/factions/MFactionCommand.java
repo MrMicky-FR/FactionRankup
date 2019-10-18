@@ -5,7 +5,7 @@ import com.massivecraft.factions.cmd.FactionsCommand;
 import com.massivecraft.factions.cmd.req.ReqHasFaction;
 import fr.mrmicky.factionrankup.compatibility.FactionRankupCommand;
 
-public class MFactionCommand extends FactionsCommand {
+public class MFactionCommand extends FactionsCommand implements AutoCloseable {
 
     public MFactionCommand() {
         addAliases(FactionRankupCommand.getRankupAliases());
@@ -19,5 +19,10 @@ public class MFactionCommand extends FactionsCommand {
     @Override
     public void perform() {
         FactionRankupCommand.executeRankup(me);
+    }
+
+    @Override
+    public void close() {
+        CmdFactions.get().removeChild(this);
     }
 }

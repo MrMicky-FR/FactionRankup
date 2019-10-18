@@ -6,7 +6,7 @@
 
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup</artifactId>
-    <version>3.2.6</version>
+    <version>3.2.7</version>
 
     <name>FactionRankup</name>
 
@@ -73,6 +73,10 @@
             <url>http://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
         <repository>
+            <id>md5-repo</id>
+            <url>https://repo.md-5.net/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -86,6 +90,13 @@
             <version>1.14.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Vault -->
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- FastInv -->
         <dependency>
             <groupId>fr.mrmicky</groupId>
@@ -97,7 +108,7 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
-            <version>1.6.9.5-U0.4.0</version>
+            <version>1.6.9.5-U0.5.3</version>
             <scope>provided</scope>
         </dependency>
         <!-- FactionsUUID Legacy -->

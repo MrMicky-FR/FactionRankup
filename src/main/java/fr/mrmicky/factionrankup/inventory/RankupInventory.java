@@ -38,11 +38,14 @@ import java.util.function.UnaryOperator;
 public class RankupInventory extends FastInv {
 
     private final FactionRankup plugin;
+
+    private final Player player;
     private final IFaction faction;
 
     public RankupInventory(FactionRankup plugin, Player player) {
         super(54, ChatUtils.color(plugin.getConfig().getString("rankup-inventory.name")));
         this.plugin = plugin;
+        this.player = player;
         this.faction = Compatibility.get().getFactionByPlayer(player);
 
         init();
@@ -59,7 +62,7 @@ public class RankupInventory extends FastInv {
         UnaryOperator<String> replace = s -> s.replace("%faction_name%", faction.getName())
                 .replace("%faction_level%", Integer.toString(level))
                 .replace("%next_level_cost%", Double.toString(nextLevel == null ? 0 : nextLevel.getCost()))
-                .replace("%money%", Double.toString(faction.getMoney()));
+                .replace("%money%", Double.toString(getMoney()));
 
         setItem(13, getItem(Material.matchMaterial(item.getString("type")), item.getInt("data"), item.getString("name"),
                 item.getStringList("lore"), false, replace), maxLevel ? null : e -> rankup((Player) e.getWhoClicked()));
@@ -71,7 +74,7 @@ public class RankupInventory extends FastInv {
                     .replace("%state%", plugin.getMessage(unlocked ? "unlocked" : "locked"))
                     .replace("%max_members%", Integer.toString(lvl.getMaxMembers()))
                     .replace("%level%", Integer.toString(lvl.getLevel()))
-                    .replace("%money%", Double.toString(faction.getMoney()));
+                    .replace("%money%", Double.toString(getMoney()));
 
             List<String> lore = new ArrayList<>(conf.getStringList("levels-item.lore"));
             List<String> abilityInfos = new ArrayList<>(lvl.getDescription());
@@ -108,7 +111,7 @@ public class RankupInventory extends FastInv {
 
         Level nextLevel = plugin.getLevelManager().getLevel(nextLvl);
 
-        if (faction.hasMoney(nextLevel.getCost())) {
+        if (hasMoney(nextLevel.getCost())) {
             player.closeInventory();
 
             FactionRankupEvent event = new FactionRankupEvent(faction, lvl, lvl + 1);
@@ -120,7 +123,14 @@ public class RankupInventory extends FastInv {
             }
 
             plugin.setFactionLevel(faction, nextLvl);
-            faction.removeMoney(nextLevel.getCost());
+
+            if (plugin.isUsingVault()) {
+                plugin.getVaultAdapter().removeMoney(player, nextLevel.getCost());
+            } else {
+                faction.removeMoney(nextLevel.getCost());
+            }
+
+            plugin.getLogger().info("The faction " + faction.getName() + " was upgraded to level " + nextLvl + " by " + player.getName());
 
             if (plugin.getConfig().getBoolean("rankup-fireworks")) {
                 startFireworks(player);
@@ -210,5 +220,13 @@ public class RankupInventory extends FastInv {
                 }
             }
         }.runTaskTimer(plugin, 10, 10);
+    }
+
+    private double getMoney() {
+        return plugin.isUsingVault() ? plugin.getVaultAdapter().getMoney(player) : faction.getMoney();
+    }
+
+    private boolean hasMoney(double amount) {
+        return  plugin.isUsingVault() ? plugin.getVaultAdapter().hasMoney(player, amount) : faction.hasMoney(amount);
     }
 }

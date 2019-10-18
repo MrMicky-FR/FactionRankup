@@ -31,4 +31,7 @@ public interface IFactionManager {
     IFaction getWarzone();
 
     IFaction getWilderness();
+
+    default void disable() {
+    }
 }

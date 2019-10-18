@@ -3,6 +3,8 @@ config-version: 2
 
 check-updates: true
 
+use-vault-money: false
+
 rankup-fireworks: true
 
 max-members-level-0: 2
@@ -10,6 +12,9 @@ max-members-level-0: 2
 level-in-chat: true
 
 chat-prefix: "&6(&a%level%&6) &f"
+
+# Add prefix if the factions level is 0
+prefix-no-level: true
 
 f-rankup-aliases:
 - "rankup"
@@ -37,9 +42,9 @@ rankup-inventory:
     - ''
     - '&7Faction: &c%faction_name%'
     - '&7Level: &c%faction_level%'
-    - '&7Faction money: &c%money% $'
+    - '&7Money: &c%money% $'
     - '&7'
-    - '&7Next Rank: &c%next_level_cost% $'
+    - '&7Next level cost: &c%next_level_cost% $'
     - ''
   rankup-item-max-level:
     type: INK_SACK

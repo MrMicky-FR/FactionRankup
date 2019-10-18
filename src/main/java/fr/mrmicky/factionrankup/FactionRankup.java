@@ -18,12 +18,14 @@ import fr.mrmicky.factionrankup.utils.Checker;
 import fr.mrmicky.factionrankup.utils.ConfigWrapper;
 import fr.mrmicky.factionrankup.utils.FastReflection;
 import fr.mrmicky.factionrankup.utils.Migration;
+import fr.mrmicky.factionrankup.economy.VaultAdapter;
 import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class FactionRankup extends JavaPlugin {
 
@@ -39,6 +41,8 @@ public class FactionRankup extends JavaPlugin {
 
     private ConfigWrapper levels;
     private ConfigWrapper messages;
+
+    private VaultAdapter vaultAdapter;
 
     public static FactionRankup getInstance() {
         return instance;
@@ -84,6 +88,10 @@ public class FactionRankup extends JavaPlugin {
         levelManager = new LevelManager(this);
         levelManager.loadLevels();
 
+        if (getConfig().getBoolean("check-updates")) {
+            getServer().getScheduler().runTaskAsynchronously(this, checker::checkUpdate);
+        }
+
         if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
             start();
         } else {
@@ -99,10 +107,6 @@ public class FactionRankup extends JavaPlugin {
                 }
             });
         }
-
-        if (getConfig().getBoolean("check-updates")) {
-            getServer().getScheduler().runTaskAsynchronously(this, checker::checkUpdate);
-        }
     }
 
     @Override
@@ -110,19 +114,46 @@ public class FactionRankup extends JavaPlugin {
         if (storageManager != null && storageManager.getProvider() != null) {
             storageManager.getProvider().shutdown();
         }
+
+        if (Compatibility.get() != null) {
+            Compatibility.get().disable();
+        }
     }
 
     private void start() {
-        switch (factionType) {
-            case FACTIONS:
-                Compatibility.setFactionManager(new MFactionsManager());
-                break;
-            case FACTIONS_UUID:
-                Compatibility.setFactionManager(new FactionsUUIDManager());
-                break;
-            case LEGACY_FACTIONS:
-                Compatibility.setFactionManager(new LegacyFactionsManager());
-                break;
+        if (getConfig().getBoolean("use-vault-money")) {
+            VaultAdapter vault = new VaultAdapter();
+
+            if (!vault.setupEconomy()) {
+                getLogger().severe("Vault economy is enabled but Vault is not found, disabling...");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+            getLogger().info("Vault support enabled");
+
+            vaultAdapter = vault;
+        }
+
+        try {
+            switch (factionType) {
+                case FACTIONS:
+                    Compatibility.setFactionManager(new MFactionsManager());
+                    break;
+                case FACTIONS_UUID:
+                    Compatibility.setFactionManager(new FactionsUUIDManager());
+                    break;
+                case LEGACY_FACTIONS:
+                    Compatibility.setFactionManager(new LegacyFactionsManager());
+                    break;
+            }
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Error while enabling faction support", e);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        if (Compatibility.get() == null) {
+            throw new IllegalStateException("Compatibility not loaded");
         }
 
         Migration.migrateV3_1toV3_2(this);
@@ -150,6 +181,14 @@ public class FactionRankup extends JavaPlugin {
 
     public LevelManager getLevelManager() {
         return levelManager;
+    }
+
+    public VaultAdapter getVaultAdapter() {
+        return vaultAdapter;
+    }
+
+    public boolean isUsingVault() {
+        return vaultAdapter != null;
     }
 
     public void reloadAllConfigs() {

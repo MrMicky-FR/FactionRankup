@@ -21,6 +21,13 @@ public class CommandRankup implements TabExecutor {
     }
 
     public static void execute(FactionRankup plugin, Player player) {
+        if (!plugin.isEnabled()) {
+            player.sendMessage(ChatColor.RED + "The plugin is not correctly enabled.");
+            plugin.getLogger().severe("The player " + player.getName() + " executed rankup command but the plugin is not enable");
+            plugin.getLogger().severe("Try to restart the server to fix the problem.");
+            return;
+        }
+
         if (!player.hasPermission("factionranking.openmenu") && !player.hasPermission("factionrankup.use")) {
             player.sendMessage(plugin.getMessage("no-permission"));
             return;
