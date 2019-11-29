@@ -26,7 +26,7 @@ public class LevelManager {
     public LevelManager(FactionRankup plugin) {
         this.plugin = plugin;
 
-        registerAbility("Command", (name, conf) -> new CommandAbility(name, conf.getString("command", "")));
+        registerAbility("Command", CommandAbility::new);
         registerAbility("PotionEffect", PotionAbility::new);
         registerAbility("Fly", (name, conf) -> new Ability(name));
         registerAbility("ReduceFalls", ChanceAbility::new);
