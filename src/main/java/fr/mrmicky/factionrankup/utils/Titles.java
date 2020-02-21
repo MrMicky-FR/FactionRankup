@@ -1,8 +1,5 @@
 package fr.mrmicky.factionrankup.utils;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,18 +13,27 @@ public final class Titles {
     private static boolean v1_7 = Bukkit.getVersion().contains("1.7");
 
     static {
-        try {
-            Player.Spigot.class.getMethod("sendMessage", ChatMessageType.class, BaseComponent.class);
-            supportSpigotActionBar = true;
-        } catch (NoSuchMethodException e) {
-            supportSpigotActionBar = false;
-        }
-
-        try {
-            Player.class.getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class);
-            supportSendTitle = true;
-        } catch (NoSuchMethodException e) {
+        if (v1_7) {
             supportSendTitle = false;
+            supportSpigotActionBar = false;
+        } else {
+            try {
+                Class.forName("net.md_5.bungee.api.ChatMessageType");
+                Class.forName("org.bukkit.entity.Player.Spigot");
+
+                SpigotTitles.verifySpigotCompat();
+
+                supportSpigotActionBar = true;
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                supportSpigotActionBar = false;
+            }
+
+            try {
+                Player.class.getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class);
+                supportSendTitle = true;
+            } catch (NoSuchMethodException e) {
+                supportSendTitle = false;
+            }
         }
     }
 
@@ -53,10 +59,11 @@ public final class Titles {
             return;
         }
 
-        if (supportSpigotActionBar) {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
-        } else {
+        if (!supportSpigotActionBar) {
             TitlesNMS.sendActionbar(p, text);
+            return;
         }
+
+        SpigotTitles.sendSpigotActionBar(p, text);
     }
 }

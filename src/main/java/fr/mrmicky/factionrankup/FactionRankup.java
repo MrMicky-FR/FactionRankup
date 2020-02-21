@@ -10,15 +10,16 @@ import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.implementations.factions.MFactionsManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.FactionsUUIDManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
+import fr.mrmicky.factionrankup.economy.VaultAdapter;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
+import fr.mrmicky.factionrankup.placeholder.PlaceHolderApiExpansion;
 import fr.mrmicky.factionrankup.storage.StorageManager;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
 import fr.mrmicky.factionrankup.utils.Checker;
 import fr.mrmicky.factionrankup.utils.ConfigWrapper;
 import fr.mrmicky.factionrankup.utils.FastReflection;
 import fr.mrmicky.factionrankup.utils.Migration;
-import fr.mrmicky.factionrankup.economy.VaultAdapter;
 import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -167,6 +168,10 @@ public class FactionRankup extends JavaPlugin {
 
         getCommand("frankup").setExecutor(new CommandRankup(this));
         getCommand("factionrankup").setExecutor(new CommandFactionrankup(this));
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceHolderApiExpansion(this).register();
+        }
 
         getLogger().info("Using faction adapter " + factionType.getName() + " (" + USER_ID + ")");
     }
