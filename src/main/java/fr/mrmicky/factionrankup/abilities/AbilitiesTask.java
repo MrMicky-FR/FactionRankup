@@ -16,7 +16,7 @@ public class AbilitiesTask extends BukkitRunnable {
     public AbilitiesTask(FactionRankup plugin) {
         this.plugin = plugin;
 
-        runTaskTimer(plugin, 5, 20);
+        runTaskTimer(plugin, 10, 20);
     }
 
     @Override

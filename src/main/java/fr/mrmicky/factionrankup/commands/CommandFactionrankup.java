@@ -58,7 +58,7 @@ public class CommandFactionrankup implements TabExecutor {
             } else {
                 int i = ChatUtils.parseInt(args[2]);
 
-                if (i < 0 || i > (plugin.getLevelManager().getLevels().size() - 1)) {
+                if (i < 0 || i > plugin.getLevelManager().getLevels().size()) {
                     sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid level");
                     return true;
                 }

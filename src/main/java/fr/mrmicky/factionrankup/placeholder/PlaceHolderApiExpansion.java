@@ -37,26 +37,19 @@ public class PlaceHolderApiExpansion extends PlaceholderExpansion {
         return "FactionRankup";
     }
 
-    /**
-     * This is the version of this expansion
-     */
     @Override
     public String getVersion() {
         return plugin.getDescription().getVersion();
     }
 
-    /**
-     * This is the method called when a placeholder with our identifier is found
-     * and needs a value We specify the value identifier in this method
-     */
     @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
-        if (p == null) {
+    public String onPlaceholderRequest(Player player, String identifier) {
+        if (player == null) {
             return "";
         }
 
         if (identifier.equals("level")) {
-            return String.valueOf(plugin.getFactionLevel(p));
+            return Integer.toString(plugin.getFactionLevel(player));
         }
         return null;
     }

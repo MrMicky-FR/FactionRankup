@@ -30,6 +30,7 @@ public class LevelManager {
         registerAbility("PotionEffect", PotionAbility::new);
         registerAbility("Fly", (name, conf) -> new Ability(name));
         registerAbility("ReduceFalls", ChanceAbility::new);
+        registerAbility("DoubleOre", ChanceAbility::new);
         registerAbility("SilkTouch", ChanceAbility::new);
         registerAbility("DoubleXP", ChanceAbility::new);
         registerAbility("InstantCrops", ChanceAbility::new);

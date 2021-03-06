@@ -36,6 +36,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -191,23 +192,42 @@ public class AbilitiesListener implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
+        Block block = e.getBlock();
         Player player = e.getPlayer();
-        // noinspection deprecation
         ItemStack item = player.getItemInHand();
 
-        if (item == null || item.getType() == Material.AIR || item.containsEnchantment(Enchantment.SILK_TOUCH)
-                || !Enchantment.SILK_TOUCH.canEnchantItem(item) || player.getGameMode() != GameMode.SURVIVAL) {
+        if (item.getType() == Material.AIR || player.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
 
-        if (isChanceAbilityActive(player, "SilkTouch")) {
+        if (!item.containsEnchantment(Enchantment.SILK_TOUCH)
+                && Enchantment.SILK_TOUCH.canEnchantItem(item)
+                && isChanceAbilityActive(player, "SilkTouch")) {
             sendActionbar(player, "silktouch");
 
             item.addEnchantment(Enchantment.SILK_TOUCH, 1);
-            // noinspection deprecation
+
             Bukkit.getScheduler().runTask(plugin, () -> player.getItemInHand().removeEnchantment(Enchantment.SILK_TOUCH));
+        }
+
+        if (block.getType().name().contains("_ORE") && isChanceAbilityActive(player, "DoubleOre")) {
+
+            Collection<ItemStack> drops = block.getDrops(item);
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!e.isCancelled()) {
+                    drops.forEach(i -> block.getWorld().dropItem(block.getLocation(), i));
+
+                    System.out.println("GOODD");
+
+                    sendActionbar(player, "double-ore");
+                } else {
+                    System.out.println("NOOOPP");
+                }
+            });
         }
     }
 

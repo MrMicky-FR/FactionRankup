@@ -51,9 +51,4 @@ public final class FastReflection {
             return Optional.empty();
         }
     }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static Object enumValueOf(Class<?> enumClass, String enumName) {
-        return Enum.valueOf((Class<Enum>) enumClass, enumName.toUpperCase());
-    }
 }
