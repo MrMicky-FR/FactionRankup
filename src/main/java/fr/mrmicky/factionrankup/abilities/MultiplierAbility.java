@@ -4,9 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * @author MrMicky
- */
 public class MultiplierAbility extends ChanceAbility {
 
     private final int min;

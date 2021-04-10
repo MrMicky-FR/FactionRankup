@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author MrMicky
- */
 public class Level {
 
     private final List<Ability> abilities = new ArrayList<>();

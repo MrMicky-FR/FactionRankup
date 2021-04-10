@@ -4,9 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * @author MrMicky
- */
 public class ChanceAbility extends Ability {
 
     private final int chance;

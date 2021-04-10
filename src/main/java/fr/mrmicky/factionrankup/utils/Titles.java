@@ -3,9 +3,6 @@ package fr.mrmicky.factionrankup.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-/**
- * @author MrMicky
- */
 public final class Titles {
 
     private static boolean supportSendTitle;
@@ -19,8 +16,7 @@ public final class Titles {
         } else {
             try {
                 Class.forName("net.md_5.bungee.api.ChatMessageType");
-                Class.forName("org.bukkit.entity.Player.Spigot");
-
+                Player.class.getMethod("spigot");
                 SpigotTitles.verifySpigotCompat();
 
                 supportSpigotActionBar = true;

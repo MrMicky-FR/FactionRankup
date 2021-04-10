@@ -5,9 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-/**
- * @author MrMicky
- */
 public class PotionAbility extends Ability {
 
     private final PotionEffectType effectType;

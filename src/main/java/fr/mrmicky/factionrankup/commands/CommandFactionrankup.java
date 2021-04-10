@@ -55,17 +55,18 @@ public class CommandFactionrankup implements TabExecutor {
 
             if (args.length < 3) {
                 sender.sendMessage(ChatColor.GOLD + "Level of faction " + faction.getName() + ": " + plugin.getFactionLevel(faction));
-            } else {
-                int i = ChatUtils.parseInt(args[2]);
-
-                if (i < 0 || i > plugin.getLevelManager().getLevels().size()) {
-                    sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid level");
-                    return true;
-                }
-
-                plugin.setFactionLevel(faction, i);
-                sender.sendMessage(ChatColor.GOLD + "Level of faction " + faction.getName() + " is now " + i);
+                return true;
             }
+
+            int i = ChatUtils.parseInt(args[2]);
+
+            if (i < 0 || i > plugin.getLevelManager().getLevels().size()) {
+                sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid level");
+                return true;
+            }
+
+            plugin.setFactionLevel(faction, i);
+            sender.sendMessage(ChatColor.GOLD + "Level of faction " + faction.getName() + " is now " + i);
             return true;
         }
 

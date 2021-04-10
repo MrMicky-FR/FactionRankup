@@ -1,8 +1,5 @@
 package fr.mrmicky.factionrankup.abilities;
 
-/**
- * @author MrMicky
- */
 public class OldAbilities {
 
     public static final Ability FLY = new Ability("Fly");

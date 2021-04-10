@@ -1,6 +1,7 @@
 package fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid;
 
 import com.massivecraft.factions.event.FPlayerJoinEvent;
+import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.FactionsListener;
@@ -20,6 +21,11 @@ public class FactionsUUIDListener extends FactionsListener {
         }
 
         handleJoin(e.getfPlayer().getPlayer(), new FactionsUUIDImpl(e.getFaction()), e.getFaction().getFPlayers().size(), e);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onFactionLeave(FPlayerLeaveEvent e) {
+        handleLeave(e.getfPlayer().getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

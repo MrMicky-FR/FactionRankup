@@ -32,9 +32,6 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.UnaryOperator;
 
-/**
- * @author MrMicky
- */
 public class RankupInventory extends FastInv {
 
     private final FactionRankup plugin;
@@ -111,54 +108,55 @@ public class RankupInventory extends FastInv {
 
         Level nextLevel = plugin.getLevelManager().getLevel(nextLvl);
 
-        if (hasMoney(nextLevel.getCost())) {
-            player.closeInventory();
-
-            FactionRankupEvent event = new FactionRankupEvent(faction, lvl, lvl + 1);
-
-            Bukkit.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                return;
-            }
-
-            plugin.setFactionLevel(faction, nextLvl);
-
-            if (plugin.isUsingVault()) {
-                plugin.getVaultAdapter().removeMoney(player, nextLevel.getCost());
-            } else {
-                faction.removeMoney(nextLevel.getCost());
-            }
-
-            plugin.getLogger().info("The faction " + faction.getName() + " was upgraded to level " + nextLvl + " by " + player.getName());
-
-            if (plugin.getConfig().getBoolean("rankup-fireworks")) {
-                startFireworks(player);
-            }
-
-            String title = plugin.getMessage("rankup.title");
-            String subtitle = plugin.getMessage("rankup.subtitle");
-            Titles.sendTitle(player, title, subtitle, 5, 30, 5);
-
-            String message = plugin.getMessage("rankup.chat");
-            if (!message.isEmpty()) {
-                String messageReplaced = replacePlaceholder(player, plugin.getMessage("rankup.chat"), faction.getName(), lvl);
-                faction.getPlayers().forEach(ps -> ps.sendMessage(messageReplaced));
-            }
-
-            String bc = plugin.getMessage("rankup.broadcast");
-            if (!bc.isEmpty()) {
-                Bukkit.broadcastMessage(replacePlaceholder(player, bc, faction.getName(), lvl));
-            }
-
-            plugin.getLevelManager().getLevel(lvl + 1).getAbilities().stream()
-                    .filter(ability -> ability.getClass() == CommandAbility.class)
-                    .map(CommandAbility.class::cast)
-                    .forEach(ability -> ability.dispatchCommand(faction, lvl + 1));
-        } else {
+        if (!hasMoney(nextLevel.getCost())) {
             player.sendMessage(plugin.getMessage("no-money"));
             player.closeInventory();
+            return;
         }
+
+        player.closeInventory();
+
+        FactionRankupEvent event = new FactionRankupEvent(faction, lvl, lvl + 1);
+
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            return;
+        }
+
+        plugin.setFactionLevel(faction, nextLvl);
+
+        if (plugin.isUsingVault()) {
+            plugin.getVaultAdapter().removeMoney(player, nextLevel.getCost());
+        } else {
+            faction.removeMoney(nextLevel.getCost());
+        }
+
+        plugin.getLogger().info("The faction " + faction.getName() + " was upgraded to level " + nextLvl + " by " + player.getName());
+
+        if (plugin.getConfig().getBoolean("rankup-fireworks")) {
+            startFireworks(player);
+        }
+
+        String title = plugin.getMessage("rankup.title");
+        String subtitle = plugin.getMessage("rankup.subtitle");
+        Titles.sendTitle(player, title, subtitle, 5, 30, 5);
+
+        String message = plugin.getMessage("rankup.chat");
+        if (!message.isEmpty()) {
+            String messageReplaced = replacePlaceholder(player, plugin.getMessage("rankup.chat"), faction.getName(), lvl);
+            faction.getPlayers().forEach(ps -> ps.sendMessage(messageReplaced));
+        }
+
+        String bc = plugin.getMessage("rankup.broadcast");
+        if (!bc.isEmpty()) {
+            Bukkit.broadcastMessage(replacePlaceholder(player, bc, faction.getName(), lvl));
+        }
+
+        plugin.getLevelManager().getLevel(lvl + 1).getAbilities().stream()
+                .filter(ability -> ability.getClass() == CommandAbility.class)
+                .map(CommandAbility.class::cast)
+                .forEach(ability -> ability.dispatchCommand(faction, lvl + 1));
     }
 
     private ItemStack getItem(Material type, int data, String name, List<String> lore, boolean glow, UnaryOperator<String> replaces) {
@@ -227,6 +225,6 @@ public class RankupInventory extends FastInv {
     }
 
     private boolean hasMoney(double amount) {
-        return  plugin.isUsingVault() ? plugin.getVaultAdapter().hasMoney(player, amount) : faction.hasMoney(amount);
+        return plugin.isUsingVault() ? plugin.getVaultAdapter().hasMoney(player, amount) : faction.hasMoney(amount);
     }
 }

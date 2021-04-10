@@ -7,9 +7,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/**
- * @author MrMicky
- */
 final class TitlesNMS {
 
     // Packet sending

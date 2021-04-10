@@ -30,7 +30,6 @@ import java.util.logging.Level;
 
 public class FactionRankup extends JavaPlugin {
 
-    //public static final String USER_ID = "BETA-589";
     public static final String USER_ID = "%%__USER__%%";
     public static final String NONCE_ID = "%%__NONCE__%%";
 
@@ -73,11 +72,6 @@ public class FactionRankup extends JavaPlugin {
 
         instance = this;
 
-        Checker checker = new Checker(this);
-        if (!checker.isValid()) {
-            return;
-        }
-
         FastInvManager.register(this);
 
         Migration.migrateV2toV3(this);
@@ -89,9 +83,18 @@ public class FactionRankup extends JavaPlugin {
         levelManager = new LevelManager(this);
         levelManager.loadLevels();
 
-        if (getConfig().getBoolean("check-updates")) {
-            getServer().getScheduler().runTaskAsynchronously(this, checker::checkUpdate);
-        }
+        getServer().getScheduler().runTaskAsynchronously(this, () ->  {
+            Checker checker = new Checker(this);
+
+            if (!checker.isValid()) {
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+
+            if (getConfig().getBoolean("check-updates")) {
+                checker.checkUpdate();
+            }
+        });
 
         if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
             start();
@@ -148,7 +151,7 @@ public class FactionRankup extends JavaPlugin {
                     break;
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Error while enabling faction support", e);
+            getLogger().log(Level.SEVERE, "An error occurred while enabling faction support", e);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -159,9 +162,15 @@ public class FactionRankup extends JavaPlugin {
 
         Migration.migrateV3_1toV3_2(this);
 
-        new AbilitiesTask(this);
+        try {
+            storageManager = new StorageManager(this);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "An error occurred while loading factions", e);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
-        storageManager = new StorageManager(this);
+        new AbilitiesTask(this);
 
         getServer().getPluginManager().registerEvents(new RankupListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilitiesListener(this), this);

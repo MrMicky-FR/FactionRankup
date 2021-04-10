@@ -6,9 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-/**
- * @author MrMicky
- */
 public class RankupListener implements Listener {
 
     private final FactionRankup plugin;

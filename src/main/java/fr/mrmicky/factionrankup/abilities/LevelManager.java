@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
-/**
- * @author MrMicky
- */
 public class LevelManager {
 
     private final Map<String, BiFunction<String, ConfigurationSection, Ability>> abilities = new HashMap<>();

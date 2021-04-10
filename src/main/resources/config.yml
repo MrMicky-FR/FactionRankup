@@ -23,6 +23,15 @@ f-rankup-aliases:
 # Only with FactionsUUID or LegacyFaction if optipn 'useOldHelp' is enable
 f-rankup-page: 2
 
+# Use MySQL database for factions levels storage
+database:
+  enabled: false
+  address: localhost
+  database: factionrankup
+  username: 'root'
+  password: ''
+  port: 3306
+
 rankup-inventory:
   name: '&c&lRankup'
   levels-item:

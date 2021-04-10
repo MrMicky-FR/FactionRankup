@@ -28,6 +28,10 @@ public class FactionsListener implements Listener {
         }
     }
 
+    protected void handleLeave(Player player) {
+        player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
+    }
+
     protected void handleDisband(IFaction faction) {
         faction.getPlayers().forEach(p -> p.getActivePotionEffects().forEach(e -> p.removePotionEffect(e.getType())));
 

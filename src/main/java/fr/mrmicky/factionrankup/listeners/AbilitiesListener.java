@@ -221,11 +221,7 @@ public class AbilitiesListener implements Listener {
                 if (!e.isCancelled()) {
                     drops.forEach(i -> block.getWorld().dropItem(block.getLocation(), i));
 
-                    System.out.println("GOODD");
-
                     sendActionbar(player, "double-ore");
-                } else {
-                    System.out.println("NOOOPP");
                 }
             });
         }

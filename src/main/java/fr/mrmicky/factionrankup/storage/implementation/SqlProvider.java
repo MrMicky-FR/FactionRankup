@@ -13,20 +13,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
-/**
- * @author MrMicky
- */
 public class SqlProvider implements StorageProvider {
 
     private static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS factionrankup_factions (" +
-                    "`faction_id` VARCHAR(16) NOT NULL," +
-                    "`level` INT NOT NULL," +
-                    "PRIMARY KEY (`faction_id`)" +
+                    "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
+                    "`faction_id` VARCHAR(48) NOT NULL UNIQUE," +
+                    "`level` INT UNSIGNED NOT NULL," +
+                    "PRIMARY KEY (`id`)" +
                     ")";
-    private static final String SELECT_ALL = "SELECT * FROM factionrankup_factions WHERE `level` > 0";
-    private static final String INSERT_FACTION = "INSERT INTO factionrankup_factions (`faction_id`, `level`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `level` = ?";
-    private static final String REMOVE_FACTION = "DELETE FROM factionrankup_factions WHERE `faction_id` = ?";
+    private static final String SELECT_ALL = "SELECT * FROM `factionrankup_factions`";
+    private static final String INSERT_FACTION = "INSERT INTO `factionrankup_factions` (`faction_id`, `level`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `level` = ?";
+    private static final String REMOVE_FACTION = "DELETE FROM `factionrankup_factions` WHERE `faction_id` = ?";
 
     private final FactionRankup plugin;
     private final StorageManager storageManager;
@@ -54,29 +52,27 @@ public class SqlProvider implements StorageProvider {
             statement.execute(CREATE_TABLE);
         }
 
-        runAsync(() -> {
-            try (PreparedStatement ps = connection.prepareStatement(SELECT_ALL)) {
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        String faction = rs.getString("faction_id");
-                        int level = rs.getInt("level");
+        loadFactionsLevels();
 
-                        storageManager.getFactionLevels().put(faction, level);
-                    }
-                }
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            try {
+                loadFactionsLevels();
+            } catch (SQLException e) {
+                plugin.getLogger().log(Level.SEVERE, "A database error occurred while loading levels", e);
             }
-        });
+        }, 12000, 12000); // 10 minutes
     }
 
     private void connect() throws SQLException {
         plugin.getLogger().info("Connecting to MySQL...");
-        long start = System.currentTimeMillis();
+
+        long startTime = System.currentTimeMillis();
         if (connection != null && !connection.isClosed()) {
             return;
         }
 
         connection = DriverManager.getConnection(credentials.getConnectionURL(), credentials.getUsername(), credentials.getPassword());
-        plugin.getLogger().info("MySQL connected in " + (System.currentTimeMillis() - start) + " ms !");
+        plugin.getLogger().info("Connected to MySQL connected in " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
@@ -85,7 +81,7 @@ public class SqlProvider implements StorageProvider {
             if (connection != null) {
                 connection.close();
                 connection = null;
-                plugin.getLogger().info("MySQL disconnected");
+                plugin.getLogger().info("Disconnected from MySQL database");
             }
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "MySQL disconnect error", e);
@@ -105,7 +101,7 @@ public class SqlProvider implements StorageProvider {
     @Override
     public void setFactionLevel(String factionId, int level) {
         runAsync(() -> {
-            try (PreparedStatement ps = connection.prepareStatement(INSERT_FACTION)) {
+            try (PreparedStatement ps = getConnection().prepareStatement(INSERT_FACTION)) {
                 ps.setString(1, factionId);
                 ps.setInt(2, level);
                 ps.setInt(3, level);
@@ -118,7 +114,7 @@ public class SqlProvider implements StorageProvider {
     @Override
     public void deleteFaction(String factionId) {
         runAsync(() -> {
-            try (PreparedStatement ps = connection.prepareStatement(REMOVE_FACTION)) {
+            try (PreparedStatement ps = getConnection().prepareStatement(REMOVE_FACTION)) {
                 ps.setString(1, factionId);
 
                 ps.executeUpdate();
@@ -126,17 +122,30 @@ public class SqlProvider implements StorageProvider {
         });
     }
 
-    private void runAsync(RunnableSQL runnable) {
+    private void loadFactionsLevels() throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(SELECT_ALL)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String faction = rs.getString("faction_id");
+                    int level = rs.getInt("level");
+
+                    storageManager.getFactionLevels().put(faction, level);
+                }
+            }
+        }
+    }
+
+    private void runAsync(SQLRunnable runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 runnable.run();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "SQL error", e);
+                plugin.getLogger().log(Level.SEVERE, "A database error occurred", e);
             }
         });
     }
 
-    interface RunnableSQL {
+    interface SQLRunnable {
 
         void run() throws SQLException;
     }

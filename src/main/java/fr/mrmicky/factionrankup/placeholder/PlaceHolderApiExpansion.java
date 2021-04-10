@@ -4,6 +4,9 @@ import fr.mrmicky.factionrankup.FactionRankup;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.List;
+
 public class PlaceHolderApiExpansion extends PlaceholderExpansion {
 
     private final FactionRankup plugin;
@@ -28,18 +31,23 @@ public class PlaceHolderApiExpansion extends PlaceholderExpansion {
     }
 
     @Override
+    public String getName() {
+        return plugin.getName();
+    }
+
+    @Override
     public String getIdentifier() {
         return "factionrankup";
     }
 
     @Override
-    public String getPlugin() {
-        return "FactionRankup";
+    public String getVersion() {
+        return plugin.getDescription().getVersion();
     }
 
     @Override
-    public String getVersion() {
-        return plugin.getDescription().getVersion();
+    public List<String> getPlaceholders() {
+        return Collections.singletonList("%factionrankup_level%");
     }
 
     @Override
@@ -51,6 +59,7 @@ public class PlaceHolderApiExpansion extends PlaceholderExpansion {
         if (identifier.equals("level")) {
             return Integer.toString(plugin.getFactionLevel(player));
         }
+
         return null;
     }
 }

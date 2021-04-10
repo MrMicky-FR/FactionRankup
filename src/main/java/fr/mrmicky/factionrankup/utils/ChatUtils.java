@@ -2,9 +2,6 @@ package fr.mrmicky.factionrankup.utils;
 
 import org.bukkit.ChatColor;
 
-/**
- * @author MrMicky
- */
 public final class ChatUtils {
 
     private ChatUtils() {

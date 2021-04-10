@@ -11,12 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-/**
- * @author MrMicky
- */
-
 /* Data structure:
-
 factions:
   1: # id
     level: 1

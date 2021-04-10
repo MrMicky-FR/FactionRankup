@@ -11,9 +11,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 
-/**
- * @author MrMicky
- */
 public class ConfigWrapper {
 
     private final Plugin plugin;

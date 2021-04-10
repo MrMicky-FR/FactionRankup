@@ -11,8 +11,8 @@ public class SpigotTitles {
         throw new UnsupportedOperationException();
     }
 
-    public static void sendSpigotActionBar(Player p, String text) {
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
+    public static void sendSpigotActionBar(Player player, String text) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
     }
 
     public static void verifySpigotCompat() throws NoSuchMethodException {

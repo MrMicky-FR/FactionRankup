@@ -1,8 +1,5 @@
 package fr.mrmicky.factionrankup.storage;
 
-/**
- * @author MrMicky
- */
 public interface StorageProvider {
 
     void init() throws Exception;

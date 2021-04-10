@@ -15,9 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-/**
- * @author MrMicky
- */
 public final class Migration {
 
     private Migration() {

@@ -5,9 +5,6 @@ import fr.mrmicky.factionrankup.compatibility.IFaction;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @author MrMicky
- */
 public class CommandAbility extends Ability {
 
     private final String command;
