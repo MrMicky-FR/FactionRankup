@@ -9,7 +9,6 @@ import fr.mrmicky.factionrankup.compatibility.FactionType;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.implementations.factions.MFactionsManager;
 import fr.mrmicky.factionrankup.compatibility.implementations.factionsuuid.FactionsUUIDManager;
-import fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions.LegacyFactionsManager;
 import fr.mrmicky.factionrankup.economy.VaultAdapter;
 import fr.mrmicky.factionrankup.listeners.AbilitiesListener;
 import fr.mrmicky.factionrankup.listeners.RankupListener;
@@ -53,11 +52,9 @@ public class FactionRankup extends JavaPlugin {
                 } else {
                     factionType = FactionType.FACTIONS;
                 }
-            } else if (getServer().getPluginManager().getPlugin("LegacyFactions") != null) {
-                factionType = FactionType.LEGACY_FACTIONS;
             } else {
                 getLogger().severe("No Factions plugin founded, disabling plugin");
-                getLogger().severe("Currently supported plugins: Factions, FactionsUUID and LegacyFaction");
+                getLogger().severe("Currently supported plugins: Factions and FactionsUUID");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
@@ -122,16 +119,10 @@ public class FactionRankup extends JavaPlugin {
         }
 
         try {
-            switch (factionType) {
-                case FACTIONS:
-                    Compatibility.setFactionManager(new MFactionsManager(this));
-                    break;
-                case FACTIONS_UUID:
-                    Compatibility.setFactionManager(new FactionsUUIDManager(this));
-                    break;
-                case LEGACY_FACTIONS:
-                    Compatibility.setFactionManager(new LegacyFactionsManager(this));
-                    break;
+            if (factionType == FactionType.FACTIONS) {
+                Compatibility.setFactionManager(new MFactionsManager(this));
+            } else if (factionType == FactionType.FACTIONS_UUID) {
+                Compatibility.setFactionManager(new FactionsUUIDManager(this));
             }
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "An error occurred while enabling faction support", e);

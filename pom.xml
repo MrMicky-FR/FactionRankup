@@ -74,13 +74,6 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/MassiveCore.jar</systemPath>
         </dependency>
-        <!-- LegacyFactions -->
-        <dependency>
-            <groupId>com.github.redstone</groupId>
-            <artifactId>LegacyFactions</artifactId>
-            <version>v1.4.3</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <repositories>

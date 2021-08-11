@@ -17,7 +17,7 @@ f-rankup-aliases:
 - "rankup"
 
 # Help page where the /f rankup command is display
-# Only with FactionsUUID or LegacyFaction if optipn 'useOldHelp' is enable
+# Only with FactionsUUID if the option 'useOldHelp' is enabled
 f-rankup-page: 2
 
 # Use MySQL database for factions levels storage

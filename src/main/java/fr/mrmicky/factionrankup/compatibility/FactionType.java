@@ -6,7 +6,6 @@ public enum FactionType {
 
     FACTIONS("Faction"),
     FACTIONS_UUID("FactionsUUID"),
-    LEGACY_FACTIONS("LegacyFactions"),
     CUSTOM("Custom");
 
     private final String name;
@@ -20,7 +19,7 @@ public enum FactionType {
     }
 
     public String getPluginName() {
-        return this == CUSTOM ? "?" : this != LEGACY_FACTIONS ? "Factions" : "LegacyFactions";
+        return this != CUSTOM ? "Factions" : "?";
     }
 
     public boolean isPluginEnabled() {
