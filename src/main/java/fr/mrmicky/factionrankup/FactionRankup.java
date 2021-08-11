@@ -2,7 +2,7 @@ package fr.mrmicky.factionrankup;
 
 import fr.mrmicky.factionrankup.abilities.AbilitiesTask;
 import fr.mrmicky.factionrankup.abilities.LevelManager;
-import fr.mrmicky.factionrankup.commands.CommandFactionrankup;
+import fr.mrmicky.factionrankup.commands.CommandFactionRankup;
 import fr.mrmicky.factionrankup.commands.CommandRankup;
 import fr.mrmicky.factionrankup.compatibility.Compatibility;
 import fr.mrmicky.factionrankup.compatibility.FactionType;
@@ -16,7 +16,6 @@ import fr.mrmicky.factionrankup.listeners.RankupListener;
 import fr.mrmicky.factionrankup.placeholder.PlaceHolderApiExpansion;
 import fr.mrmicky.factionrankup.storage.StorageManager;
 import fr.mrmicky.factionrankup.utils.ChatUtils;
-import fr.mrmicky.factionrankup.utils.Checker;
 import fr.mrmicky.factionrankup.utils.ConfigWrapper;
 import fr.mrmicky.factionrankup.utils.FastReflection;
 import fr.mrmicky.factionrankup.utils.Migration;
@@ -29,9 +28,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class FactionRankup extends JavaPlugin {
-
-    public static final String USER_ID = "%%__USER__%%";
-    public static final String NONCE_ID = "%%__NONCE__%%";
 
     private static FactionRankup instance;
 
@@ -83,19 +79,6 @@ public class FactionRankup extends JavaPlugin {
         levelManager = new LevelManager(this);
         levelManager.loadLevels();
 
-        getServer().getScheduler().runTaskAsynchronously(this, () ->  {
-            Checker checker = new Checker(this);
-
-            if (!checker.isValid()) {
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }
-
-            if (getConfig().getBoolean("check-updates")) {
-                checker.checkUpdate();
-            }
-        });
-
         if (factionType == FactionType.CUSTOM || factionType.isPluginEnabled()) {
             start();
         } else {
@@ -141,13 +124,13 @@ public class FactionRankup extends JavaPlugin {
         try {
             switch (factionType) {
                 case FACTIONS:
-                    Compatibility.setFactionManager(new MFactionsManager());
+                    Compatibility.setFactionManager(new MFactionsManager(this));
                     break;
                 case FACTIONS_UUID:
-                    Compatibility.setFactionManager(new FactionsUUIDManager());
+                    Compatibility.setFactionManager(new FactionsUUIDManager(this));
                     break;
                 case LEGACY_FACTIONS:
-                    Compatibility.setFactionManager(new LegacyFactionsManager());
+                    Compatibility.setFactionManager(new LegacyFactionsManager(this));
                     break;
             }
         } catch (Exception e) {
@@ -176,13 +159,13 @@ public class FactionRankup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilitiesListener(this), this);
 
         getCommand("frankup").setExecutor(new CommandRankup(this));
-        getCommand("factionrankup").setExecutor(new CommandFactionrankup(this));
+        getCommand("factionrankup").setExecutor(new CommandFactionRankup(this));
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceHolderApiExpansion(this).register();
         }
 
-        getLogger().info("Using faction adapter " + factionType.getName() + " (" + USER_ID + ")");
+        getLogger().info("Using faction adapter " + factionType.getName());
     }
 
     public FactionType getFactionType() {

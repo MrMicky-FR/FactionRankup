@@ -19,6 +19,7 @@ public class AbilitiesTask extends BukkitRunnable {
         runTaskTimer(plugin, 10, 20);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         for (Player player : Bukkit.getOnlinePlayers()) {

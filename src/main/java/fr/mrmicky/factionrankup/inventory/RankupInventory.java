@@ -74,15 +74,15 @@ public class RankupInventory extends FastInv {
                     .replace("%money%", Double.toString(getMoney()));
 
             List<String> lore = new ArrayList<>(conf.getStringList("levels-item.lore"));
-            List<String> abilityInfos = new ArrayList<>(lvl.getDescription());
+            List<String> abilityInfo = new ArrayList<>(lvl.getDescription());
 
             int j = 0;
             for (String s : lore) {
                 if (s.contains("%ability_info%")) {
-                    if (!abilityInfos.isEmpty()) {
-                        abilityInfos.set(0, s.replace("%ability_info%", abilityInfos.get(0)));
+                    if (!abilityInfo.isEmpty()) {
+                        abilityInfo.set(0, s.replace("%ability_info%", abilityInfo.get(0)));
                         lore.remove(j);
-                        lore.addAll(j, abilityInfos);
+                        lore.addAll(j, abilityInfo);
                     } else {
                         lore.remove(j);
                     }
@@ -159,6 +159,7 @@ public class RankupInventory extends FastInv {
                 .forEach(ability -> ability.dispatchCommand(faction, lvl + 1));
     }
 
+    @SuppressWarnings("deprecation")
     private ItemStack getItem(Material type, int data, String name, List<String> lore, boolean glow, UnaryOperator<String> replaces) {
         ItemStack item = new ItemStack(type == null ? Material.STONE : type, 1, (byte) data);
         ItemMeta meta = item.getItemMeta();
@@ -200,14 +201,14 @@ public class RankupInventory extends FastInv {
                 .replace("%player%", player.getName());
     }
 
-    private void startFireworks(Player p) {
+    private void startFireworks(Player player) {
         new BukkitRunnable() {
 
             int i = 8;
 
             @Override
             public void run() {
-                Firework f = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
+                Firework f = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
                 FireworkMeta fm = f.getFireworkMeta();
                 fm.addEffects(FireworkEffect.builder().withColor(getRandomColor()).withFade(getRandomColor()).trail(true).build());
                 fm.setPower(ThreadLocalRandom.current().nextInt(3));

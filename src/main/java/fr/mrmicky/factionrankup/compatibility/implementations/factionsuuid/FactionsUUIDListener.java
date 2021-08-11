@@ -10,8 +10,8 @@ import org.bukkit.event.EventPriority;
 
 public class FactionsUUIDListener extends FactionsListener {
 
-    public FactionsUUIDListener() {
-        super(FactionRankup.getInstance());
+    public FactionsUUIDListener(FactionRankup plugin) {
+        super(plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

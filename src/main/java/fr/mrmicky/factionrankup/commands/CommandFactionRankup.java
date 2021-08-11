@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandFactionrankup implements TabExecutor {
+public class CommandFactionRankup implements TabExecutor {
 
     private final FactionRankup plugin;
 
-    public CommandFactionrankup(FactionRankup plugin) {
+    public CommandFactionRankup(FactionRankup plugin) {
         this.plugin = plugin;
     }
 
@@ -30,7 +30,7 @@ public class CommandFactionrankup implements TabExecutor {
         }
 
         if (args[0].equalsIgnoreCase("id")) {
-            sender.sendMessage(ChatUtils.color("&7ID: &6" + FactionRankup.USER_ID + "&7:&6" + FactionRankup.NONCE_ID));
+            sender.sendMessage(ChatUtils.color("&7ID:&6 %%__USER__%% &7/&6 %%__NONCE__%%"));
             return true;
         }
 

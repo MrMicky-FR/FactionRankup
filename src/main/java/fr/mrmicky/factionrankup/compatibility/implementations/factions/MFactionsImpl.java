@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MFactionsImpl implements IFaction {
 
-    private Faction faction;
+    private final Faction faction;
 
     public MFactionsImpl(Faction faction) {
         this.faction = faction;

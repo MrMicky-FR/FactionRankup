@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 
 public final class Titles {
 
+    private static final boolean LEGACY = Bukkit.getVersion().contains("1.7");
     private static boolean supportSendTitle;
     private static boolean supportSpigotActionBar;
-    private static boolean v1_7 = Bukkit.getVersion().contains("1.7");
 
     static {
-        if (v1_7) {
+        if (LEGACY) {
             supportSendTitle = false;
             supportSpigotActionBar = false;
         } else {
@@ -37,29 +37,29 @@ public final class Titles {
         throw new UnsupportedOperationException();
     }
 
-    public static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        if (v1_7) {
+    public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        if (LEGACY) {
             return;
         }
 
         if (supportSendTitle) {
-            p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {
-            TitlesNMS.sendTitle(p, title, subtitle, fadeIn, stay, fadeOut);
+            TitlesNMS.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
         }
     }
 
-    public static void sendActionBar(Player p, String text) {
-        if (v1_7) {
-            p.sendMessage(text);
+    public static void sendActionBar(Player player, String text) {
+        if (LEGACY) {
+            player.sendMessage(text);
             return;
         }
 
         if (!supportSpigotActionBar) {
-            TitlesNMS.sendActionbar(p, text);
+            TitlesNMS.sendActionbar(player, text);
             return;
         }
 
-        SpigotTitles.sendSpigotActionBar(p, text);
+        SpigotTitles.sendSpigotActionBar(player, text);
     }
 }

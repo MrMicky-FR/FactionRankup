@@ -1,7 +1,4 @@
-# Don't touch this :)
-config-version: 2
-
-check-updates: true
+# FactionRankup configuration
 
 use-vault-money: false
 

@@ -10,8 +10,8 @@ import org.bukkit.event.EventPriority;
 
 public class MFactionListener extends FactionsListener {
 
-    public MFactionListener() {
-        super(FactionRankup.getInstance());
+    public MFactionListener(FactionRankup plugin) {
+        super(plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -1,5 +1,6 @@
 package fr.mrmicky.factionrankup.compatibility.implementations.legacyfactions;
 
+import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
 import net.redstoneore.legacyfactions.entity.Board;
@@ -15,9 +16,9 @@ import java.util.stream.Collectors;
 
 public class LegacyFactionsManager implements IFactionManager {
 
-    public LegacyFactionsManager() {
-        new LegacyFactionsCommand();
-        new LegacyFactionsListener();
+    public LegacyFactionsManager(FactionRankup plugin) {
+        new LegacyFactionsCommand(plugin);
+        new LegacyFactionsListener(plugin);
     }
 
     @Override

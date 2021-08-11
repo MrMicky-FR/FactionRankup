@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FactionsUUIDCommandLegacy extends FCommand {
 
-    public FactionsUUIDCommandLegacy() {
+    public FactionsUUIDCommandLegacy(FactionRankup plugin) {
         aliases.addAll(FactionRankupCommand.getRankupAliases());
         setHelpShort(FactionRankupCommand.getRankupHelp());
 
@@ -45,10 +45,10 @@ public class FactionsUUIDCommandLegacy extends FCommand {
             commands = cmdHelp.helpPages;
         }
 
-        int page = FactionRankup.getInstance().getConfig().getInt("f-rankup-page");
+        int page = plugin.getConfig().getInt("f-rankup-page");
 
         if (page < 1 || page > commands.size()) {
-            FactionRankup.getInstance().getLogger().warning("Help page set in config (" + page + ") is too big or too small ! Need to be between 1 and " + commands.size());
+            plugin.getLogger().warning("Help page set in config (" + page + ") is too big or too small ! Need to be between 1 and " + commands.size());
             page = 2;
         }
 

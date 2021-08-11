@@ -5,6 +5,7 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
 import fr.mrmicky.factionrankup.utils.FastReflection;
@@ -16,13 +17,13 @@ import java.util.stream.Collectors;
 
 public class FactionsUUIDManager implements IFactionManager {
 
-    public FactionsUUIDManager() {
+    public FactionsUUIDManager(FactionRankup plugin) {
         if (FastReflection.optionalClass("com.massivecraft.factions.zcore.MCommand").isPresent()) {
-            new FactionsUUIDCommandLegacy();
+            new FactionsUUIDCommandLegacy(plugin);
         } else {
             new FactionsUUIDCommand();
         }
-        new FactionsUUIDListener();
+        new FactionsUUIDListener(plugin);
     }
 
     @Override

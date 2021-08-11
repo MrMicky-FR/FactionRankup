@@ -6,85 +6,13 @@
 
     <groupId>fr.mrmicky</groupId>
     <artifactId>factionrankup</artifactId>
-    <version>3.2.12</version>
+    <version>3.2.14</version>
 
     <name>FactionRankup</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <finalName>${project.name}-${project.version}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>fr.mrmicky.fastinv</pattern>
-                            <shadedPattern>fr.mrmicky.factionrankup.fastinv</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <!-- Support for outdated FactionsUUID forks -->
-                            <pattern>com.massivecraft.factions.cmd.legacy</pattern>
-                            <shadedPattern>com.massivecraft.factions.cmd</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
-    <repositories>
-        <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>factions-repo</id>
-            <url>http://ci.ender.zone/plugin/repository/everything/</url>
-        </repository>
-        <repository>
-            <id>md5-repo</id>
-            <url>https://repo.md-5.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi-repo</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <!-- Spigot -->
@@ -112,14 +40,14 @@
         <dependency>
             <groupId>fr.mrmicky</groupId>
             <artifactId>FastInv</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
             <scope>compile</scope>
         </dependency>
         <!-- FactionsUUID -->
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
-            <version>1.6.9.5-U0.5.20</version>
+            <version>1.6.9.5-U0.5.23</version>
             <scope>provided</scope>
         </dependency>
         <!-- FactionsUUID Legacy -->
@@ -154,5 +82,77 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>factions-repo</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
+        <repository>
+            <id>md5-repo</id>
+            <url>https://repo.md-5.net/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi-repo</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>${project.name}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <relocations>
+                        <relocation>
+                            <pattern>fr.mrmicky.fastinv</pattern>
+                            <shadedPattern>fr.mrmicky.factionrankup.fastinv</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <!-- Support for outdated FactionsUUID forks -->
+                            <pattern>com.massivecraft.factions.cmd.legacy</pattern>
+                            <shadedPattern>com.massivecraft.factions.cmd</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
 </project>

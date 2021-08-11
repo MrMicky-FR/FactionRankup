@@ -31,35 +31,24 @@ final class TitlesNMS {
     static {
         try {
             Class<?> craftChatMessageClass = FastReflection.obcClass("util.CraftChatMessage");
-
             Class<?> entityPlayerClass = FastReflection.nmsClass("EntityPlayer");
             Class<?> playerConnectionClass = FastReflection.nmsClass("PlayerConnection");
             Class<?> craftPlayerClass = FastReflection.obcClass("entity.CraftPlayer");
-
             Class<?> packetTitleClass = FastReflection.nmsClass("PacketPlayOutTitle");
             Class<?> packetTitleAction = FastReflection.nmsClass("PacketPlayOutTitle$EnumTitleAction");
             Class<?> packetChatClass = FastReflection.nmsClass("PacketPlayOutChat");
-            Class<?> chatMessageType;
+            Class<?> chatMessageType = FastReflection.nmsOptionalClass("ChatMessageType").orElse(null);
 
             CHAT_COMPONENT_TEXT = FastReflection.nmsClass("ChatComponentText").getConstructor(String.class);
-
             MESSAGE_FROM_STRING = craftChatMessageClass.getDeclaredMethod("fromString", String.class);
             CHAT_COMPONENT_CLASS = FastReflection.nmsClass("IChatBaseComponent");
-
             PLAYER_GET_HANDLE = craftPlayerClass.getDeclaredMethod("getHandle");
             PLAYER_CONNECTION = entityPlayerClass.getDeclaredField("playerConnection");
             SEND_PACKET = playerConnectionClass.getDeclaredMethod("sendPacket", FastReflection.nmsClass("Packet"));
-
             PACKET_TITLE = packetTitleClass.getConstructor(packetTitleAction, CHAT_COMPONENT_CLASS);
             PACKET_TITLE_TIME = packetTitleClass.getConstructor(int.class, int.class, int.class);
             TITLE_ACTION_TITLE = packetTitleAction.getEnumConstants()[0];
             TITLE_ACTION_SUBTITLE = packetTitleAction.getEnumConstants()[1];
-
-            try {
-                chatMessageType = FastReflection.nmsClass("ChatMessageType");
-            } catch (ClassNotFoundException e) {
-                chatMessageType = null;
-            }
 
             if (chatMessageType != null) {
                 CHAT_ACTION_ACTIONBAR = chatMessageType.getEnumConstants()[2];
@@ -73,25 +62,29 @@ final class TitlesNMS {
         }
     }
 
-    static void sendTitle(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    private TitlesNMS() {
+        throw new UnsupportedOperationException();
+    }
+
+    static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         try {
             if (title != null) {
                 Object packetTitle = PACKET_TITLE.newInstance(TITLE_ACTION_TITLE, getChatBaseComponent(title));
-                sendPacket(p, packetTitle);
+                sendPacket(player, packetTitle);
             }
 
             if (subtitle != null) {
                 Object packetSubtitle = PACKET_TITLE.newInstance(TITLE_ACTION_SUBTITLE, getChatBaseComponent(subtitle));
-                sendPacket(p, packetSubtitle);
+                sendPacket(player, packetSubtitle);
             }
 
-            sendPacket(p, PACKET_TITLE_TIME.newInstance(fadeIn, stay, fadeOut));
+            sendPacket(player, PACKET_TITLE_TIME.newInstance(fadeIn, stay, fadeOut));
         } catch (Exception e) {
-            e.printStackTrace();
+           throw new RuntimeException(e);
         }
     }
 
-    static void sendActionbar(Player p, String message) {
+    static void sendActionbar(Player player, String message) {
         if (message == null) {
             return;
         }
@@ -99,9 +92,9 @@ final class TitlesNMS {
         try {
             Object component = CHAT_COMPONENT_TEXT.newInstance(message);
             Object packet = PACKET_CHAT.newInstance(component, CHAT_ACTION_ACTIONBAR == null ? (byte) 2 : CHAT_ACTION_ACTIONBAR);
-            sendPacket(p, packet);
+            sendPacket(player, packet);
         } catch (Exception e) {
-            e.printStackTrace();
+           throw new RuntimeException(e);
         }
     }
 
@@ -109,9 +102,10 @@ final class TitlesNMS {
         return Array.get(MESSAGE_FROM_STRING.invoke(null, s), 0);
     }
 
-    private static void sendPacket(Player p, Object packet) throws ReflectiveOperationException {
-        Object entityPlayer = PLAYER_GET_HANDLE.invoke(p);
+    private static void sendPacket(Player player, Object packet) throws ReflectiveOperationException {
+        Object entityPlayer = PLAYER_GET_HANDLE.invoke(player);
         Object playerConnection = PLAYER_CONNECTION.get(entityPlayer);
+
         SEND_PACKET.invoke(playerConnection, packet);
     }
 }

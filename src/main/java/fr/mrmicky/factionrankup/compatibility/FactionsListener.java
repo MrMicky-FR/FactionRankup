@@ -5,14 +5,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 
 public class FactionsListener implements Listener {
 
-    private FactionRankup plugin;
+    private final FactionRankup plugin;
 
-    public FactionsListener(Plugin plugin) {
-        this.plugin = FactionRankup.getInstance();
+    public FactionsListener(FactionRankup plugin) {
+        this.plugin = plugin;
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -24,6 +24,7 @@ public class FactionsListener implements Listener {
                     .replace("%faction%", faction.getName())
                     .replace("%next_level%", Integer.toString(level + 1))
                     .replace("%maxplayers%", Integer.toString(max)));
+
             event.setCancelled(true);
         }
     }

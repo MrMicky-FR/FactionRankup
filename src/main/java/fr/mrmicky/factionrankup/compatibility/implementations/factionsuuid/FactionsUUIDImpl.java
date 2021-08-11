@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FactionsUUIDImpl implements IFaction {
 
-    private Faction faction;
+    private final Faction faction;
 
     public FactionsUUIDImpl(Faction faction) {
         this.faction = faction;
@@ -37,17 +37,17 @@ public class FactionsUUIDImpl implements IFaction {
 
     @Override
     public double getMoney() {
-        return Econ.getBalance(faction.getAccountId());
+        return Econ.getBalance(faction);
     }
 
     @Override
     public boolean addMoney(double money) {
-        return Econ.deposit(faction.getAccountId(), money);
+        return Econ.deposit(faction, money);
     }
 
     @Override
     public boolean removeMoney(double money) {
-        return Econ.withdraw(faction.getAccountId(), money);
+        return Econ.withdraw(faction, money);
     }
 
     @Override

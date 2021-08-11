@@ -1,6 +1,5 @@
 package fr.mrmicky.factionrankup.abilities;
 
-import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -32,8 +31,6 @@ public class CommandAbility extends Ability {
         String cmd = command.replace("{faction}", faction.getName())
                 .replace("{faction-id}", faction.getId())
                 .replace("{level}", Integer.toString(level));
-
-        FactionRankup.getInstance().getLogger().info("Running command: " + cmd);
 
         if (allPlayers) {
             faction.getPlayers().forEach(p -> dispatchServerCommand(cmd.replace("{player}", p.getName())));

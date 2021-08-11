@@ -43,7 +43,7 @@ public class ConfigWrapper {
 
     public void save() {
         try {
-            getConfig().save(file);
+            config.save(file);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Could not save " + file, ex);
         }

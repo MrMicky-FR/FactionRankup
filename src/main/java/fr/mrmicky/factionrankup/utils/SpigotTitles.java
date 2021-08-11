@@ -5,7 +5,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
-public class SpigotTitles {
+public final class SpigotTitles {
 
     private SpigotTitles() {
         throw new UnsupportedOperationException();

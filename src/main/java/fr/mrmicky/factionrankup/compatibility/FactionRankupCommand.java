@@ -7,7 +7,11 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class FactionRankupCommand {
+public final class FactionRankupCommand {
+
+    private FactionRankupCommand() {
+        throw new UnsupportedOperationException();
+    }
 
     public static void executeRankup(Player player) {
         CommandRankup.execute(FactionRankup.getInstance(), player);

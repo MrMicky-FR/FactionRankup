@@ -5,6 +5,7 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
+import fr.mrmicky.factionrankup.FactionRankup;
 import fr.mrmicky.factionrankup.compatibility.IFaction;
 import fr.mrmicky.factionrankup.compatibility.IFactionManager;
 import org.bukkit.Location;
@@ -15,11 +16,11 @@ import java.util.stream.Collectors;
 
 public class MFactionsManager implements IFactionManager {
 
-    private MFactionCommand command;
+    private final MFactionCommand command;
 
-    public MFactionsManager() {
+    public MFactionsManager(FactionRankup plugin) {
         command = new MFactionCommand();
-        new MFactionListener();
+        new MFactionListener(plugin);
     }
 
     @Override

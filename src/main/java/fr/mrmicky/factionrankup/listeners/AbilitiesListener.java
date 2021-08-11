@@ -256,19 +256,15 @@ public class AbilitiesListener implements Listener {
 
         if (isAbilityActive(player, "Fly")) {
             if (Compatibility.get().isInOwnTerritory(player)) {
-                if (!player.getAllowFlight()) {
-                    if (flying.add(player.getUniqueId())) {
-                        player.setAllowFlight(true);
-                        sendActionbar(player, "fly-enabled");
-                    }
+                if (!player.getAllowFlight() && flying.add(player.getUniqueId())) {
+                    player.setAllowFlight(true);
+                    sendActionbar(player, "fly-enabled");
                 }
-            } else if (player.getAllowFlight()) {
-                if (flying.remove(player.getUniqueId())) {
-                    player.setAllowFlight(false);
-                    player.setFallDistance(0);
+            } else if (player.getAllowFlight() && flying.remove(player.getUniqueId())) {
+                player.setAllowFlight(false);
+                player.setFallDistance(0);
 
-                    sendActionbar(player, "fly-disabled");
-                }
+                sendActionbar(player, "fly-disabled");
             }
         }
     }

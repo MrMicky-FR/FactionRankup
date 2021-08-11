@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LegacyFactionsImpl implements IFaction {
 
-    private Faction faction;
+    private final Faction faction;
 
     public LegacyFactionsImpl(Faction faction) {
         this.faction = faction;

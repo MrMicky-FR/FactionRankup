@@ -9,8 +9,8 @@ import org.bukkit.event.EventPriority;
 
 public class LegacyFactionsListener extends FactionsListener {
 
-    public LegacyFactionsListener() {
-        super(FactionRankup.getInstance());
+    public LegacyFactionsListener(FactionRankup plugin) {
+        super(plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

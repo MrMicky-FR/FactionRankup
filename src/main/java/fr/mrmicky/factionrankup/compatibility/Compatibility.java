@@ -1,6 +1,10 @@
 package fr.mrmicky.factionrankup.compatibility;
 
-public class Compatibility {
+public final class Compatibility {
+
+    private Compatibility() {
+        throw new UnsupportedOperationException();
+    }
 
     private static IFactionManager factionManager;
 
